@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class LivraisonEtablissement extends Model
 {
-    protected $fillable = ['etablissement_id', 'semaine', 'date_livraison'];
+    use HasFactory;
+
+        protected $fillable = ['etablissement_id', 'semaine', 'date_livraison'];
 
     public function etablissement()
     {

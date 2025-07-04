@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class LotStockAdmin extends Model
 {
-    protected $fillable = [
+    use HasFactory;
+
+        protected $fillable = [
         'produit_id', 'quantite_recue', 'prix_unitaire', 'date_expiration', 'quantite_disponible', 'date_reception'
     ];
 

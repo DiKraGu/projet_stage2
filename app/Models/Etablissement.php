@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Etablissement extends Model
 {
-    protected $fillable = ['nom', 'region_id'];
+    use HasFactory;
+
+        protected $fillable = ['nom', 'region_id'];
 
     public function region()
     {
@@ -23,4 +26,3 @@ class Etablissement extends Model
         return $this->hasMany(Menu::class);
     }
 }
-
