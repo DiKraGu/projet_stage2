@@ -85,6 +85,16 @@
                         <span class="nav-text">🏢 Établissements</span>
                     </a>
                 </li>
+                <li class="nav-item px-3">
+                <a href="{{ route('admin.fournisseurs.index') }}" class="nav-link">
+                    <span class="nav-text">🧾 Fournisseurs</span>
+                </a>
+            </li>
+            <li class="nav-item px-3">
+                <a href="{{ route('admin.produits.index') }}" class="nav-link">
+                    <span class="nav-text">📋 Produits</span>
+                </a>
+            </li>
             </ul>
         </div>
 

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Etablissement;
+use App\Models\Fournisseur;
+use App\Models\Produit;
 use App\Models\Region;
 
 class DashboardController extends Controller
@@ -12,7 +14,14 @@ class DashboardController extends Controller
     {
         $nbRegions = Region::count();
         $nbEtablissements = Etablissement::count();
+        $nbFournisseurs = Fournisseur::count();
+        $nbProduits = Produit::count();
 
-        return view('admin.dashboard', compact('nbRegions', 'nbEtablissements'));
+        return view('admin.dashboard', compact(
+            'nbRegions',
+            'nbEtablissements',
+            'nbFournisseurs',
+            'nbProduits'
+        ));
     }
 }
