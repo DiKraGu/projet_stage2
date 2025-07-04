@@ -4,63 +4,54 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Etablissement;
+use App\Models\Region;
 use Illuminate\Http\Request;
 
 class EtablissementController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $etablissements = Etablissement::with('region')->get();
+        return view('admin.etablissements.index', compact('etablissements'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        $regions = Region::all();
+        return view('admin.etablissements.create', compact('regions'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nom' => 'required|string',
+            'region_id' => 'required|exists:regions,id',
+        ]);
+
+        Etablissement::create($request->only(['nom', 'region_id']));
+        return redirect()->route('admin.etablissements.index')->with('success', 'Etablissement ajouté');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Etablissement $etablissement)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Etablissement $etablissement)
     {
-        //
+        $regions = Region::all();
+        return view('admin.etablissements.edit', compact('etablissement', 'regions'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Etablissement $etablissement)
     {
-        //
+        $request->validate([
+            'nom' => 'required|string',
+            'region_id' => 'required|exists:regions,id',
+        ]);
+
+        $etablissement->update($request->only(['nom', 'region_id']));
+        return redirect()->route('admin.etablissements.index')->with('success', 'Etablissement modifié');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Etablissement $etablissement)
     {
-        //
+        $etablissement->delete();
+        return redirect()->route('admin.etablissements.index')->with('success', 'Etablissement supprimé');
     }
 }

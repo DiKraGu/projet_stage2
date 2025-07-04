@@ -9,7 +9,7 @@ class Etablissement extends Model
 {
     use HasFactory;
 
-        protected $fillable = ['nom', 'region_id'];
+    protected $fillable = ['nom', 'region_id'];
 
     public function region()
     {
