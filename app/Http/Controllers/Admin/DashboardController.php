@@ -7,6 +7,7 @@ use App\Models\Etablissement;
 use App\Models\Fournisseur;
 use App\Models\Produit;
 use App\Models\Region;
+use App\Models\Ville;
 
 class DashboardController extends Controller
 {
@@ -16,12 +17,15 @@ class DashboardController extends Controller
         $nbEtablissements = Etablissement::count();
         $nbFournisseurs = Fournisseur::count();
         $nbProduits = Produit::count();
+        $nbVilles = Ville::count();
+
 
         return view('admin.dashboard', compact(
             'nbRegions',
             'nbEtablissements',
             'nbFournisseurs',
-            'nbProduits'
+            'nbProduits',
+            'nbVilles'
         ));
     }
 }

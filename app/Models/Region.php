@@ -13,10 +13,22 @@ class Region extends Model
 
     protected $fillable = ['nom'];
 
-    public function etablissements()
-    {
-        return $this->hasMany(Etablissement::class);
+    // public function etablissements()
+    // {
+    //     return $this->hasMany(Etablissement::class);
+    // }
+
+    public function villes() {
+        return $this->hasMany(Ville::class);
     }
+
+    public function etablissements()
+{
+    return $this->hasManyThrough(
+        \App\Models\Etablissement::class,
+        \App\Models\Ville::class
+    );
+}
 
     public function down()
     {

@@ -38,5 +38,13 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-3">
+        <div class="card text-bg-info mb-3">
+            <div class="card-body">
+                <h5 class="card-title">🏙️ Villes</h5>
+                <p class="card-text fs-2">{{ $nbVilles }}</p>
+            </div>
+        </div>
+</div>
     </div>
 @endsection

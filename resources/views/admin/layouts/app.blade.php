@@ -72,29 +72,38 @@
             <ul class="nav flex-column">
                 <li class="nav-item px-3">
                     <a href="{{ route('admin.dashboard') }}" class="nav-link">
-                        <span class="nav-text">🏠 Dashboard</span>
+                        <span class="nav-text">Dashboard</span>
                     </a>
                 </li>
                 <li class="nav-item px-3">
                     <a href="{{ route('admin.regions.index') }}" class="nav-link">
-                        <span class="nav-text">📍 Régions</span>
+                        <span class="nav-text">Régions</span>
+                    </a>
+                </li>
+                <li class="nav-item px-3">
+                    <a href="{{ route('admin.villes.index') }}" class="nav-link">
+                        <span class="nav-text">Villes</span>
                     </a>
                 </li>
                 <li class="nav-item px-3">
                     <a href="{{ route('admin.etablissements.index') }}" class="nav-link">
-                        <span class="nav-text">🏢 Établissements</span>
+                        <span class="nav-text">Établissements</span>
                     </a>
                 </li>
                 <li class="nav-item px-3">
                 <a href="{{ route('admin.fournisseurs.index') }}" class="nav-link">
-                    <span class="nav-text">🧾 Fournisseurs</span>
+                    <span class="nav-text">Fournisseurs</span>
                 </a>
             </li>
             <li class="nav-item px-3">
                 <a href="{{ route('admin.produits.index') }}" class="nav-link">
-                    <span class="nav-text">📋 Produits</span>
+                    <span class="nav-text">Produits</span>
                 </a>
             </li>
+
+            {{-- <li class="nav-item mt-2">
+                <a class="nav-link" href="{{ route('admin.villes.index') }}">🏙️ Villes</a>
+            </li> --}}
             </ul>
         </div>
 
@@ -103,7 +112,7 @@
             <form method="POST" action="{{ route('admin.logout') }}">
                 @csrf
                 <button type="submit" class="btn btn-outline-light w-100">
-                    <span class="nav-text">🚪 Déconnexion</span>
+                    <span class="nav-text">Déconnexion</span>
                 </button>
             </form>
             @endauth

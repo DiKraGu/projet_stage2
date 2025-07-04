@@ -11,10 +11,15 @@ class Etablissement extends Model
 
     protected $fillable = ['nom', 'region_id'];
 
-    public function region()
-    {
-        return $this->belongsTo(Region::class);
+    // public function region()
+    // {
+    //     return $this->belongsTo(Region::class);
+    // }
+
+    public function ville() {
+        return $this->belongsTo(Ville::class);
     }
+
 
     public function livraisons()
     {
