@@ -52,7 +52,7 @@ public function store(Request $request)
     if ($exist) {
         return redirect()->back()
             ->withInput()
-            ->withErrors(['nom' => 'Une province avec ce nom existe déjà, dans une ville quelconque.']);
+            ->withErrors(['nom' => 'Une province avec ce nom existe déjà']);
     }
 
     Province::create([
@@ -100,7 +100,7 @@ public function update(Request $request, Province $province)
     if ($exist) {
         return redirect()->back()
             ->withInput()
-            ->withErrors(['nom' => 'Une autre province porte déjà']);
+            ->withErrors(['nom' => 'Une province avec ce nom existe déjà']);
     }
 
     $province->update([
