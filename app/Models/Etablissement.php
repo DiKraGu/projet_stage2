@@ -9,17 +9,14 @@ class Etablissement extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nom', 'ville_id'];
+    protected $fillable = ['nom', 'province_id'];
 
-    // public function region()
-    // {
-    //     return $this->belongsTo(Region::class);
-    // }
 
-    public function ville() {
-        return $this->belongsTo(Ville::class);
+    public function province()
+    {
+        return $this->belongsTo(Province::class);
     }
-
+ 
 
     public function livraisons()
     {

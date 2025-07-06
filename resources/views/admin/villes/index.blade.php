@@ -13,6 +13,8 @@
             <tr>
                 <th>Nom</th>
                 <th>Région</th>
+                <th>Nombre de provinces</th>
+                <th>Nombre d'établissements</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -21,6 +23,8 @@
                 <tr>
                     <td>{{ $ville->nom }}</td>
                     <td>{{ $ville->region->nom }}</td>
+                    <td>{{ $ville->provinces_count }}</td>
+                    <td>{{ $ville->provinces->flatMap->etablissements->count() }}</td>
                     <td>
                         <a href="{{ route('admin.villes.edit', $ville) }}" class="btn btn-sm btn-warning">Modifier</a>
                         <form action="{{ route('admin.villes.destroy', $ville) }}" method="POST" class="d-inline">

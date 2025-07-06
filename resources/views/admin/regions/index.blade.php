@@ -59,16 +59,20 @@
             <tr>
                 <th>Nom</th>
                 <th>Nombre de villes</th>
+                <th>Nombre de provinces</th>
                 <th>Nombre d'établissements</th>
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody> 
             @foreach($regions as $region)
                 <tr>
                     <td>{{ $region->nom }}</td>
                     <td>{{ $region->villes_count }}</td>
-                    <td>{{ $region->etablissements_count }}</td>
+                    <td>{{ $region->villes->flatMap->provinces->count() }}</td>
+                    {{-- <td>{{ $region->etablissements_count }}</td> --}}
+                    <td>{{ $region->villes->flatMap->provinces->flatMap->etablissements->count() }}</td>
+
                     <td>
                         <a href="{{ route('admin.regions.edit', $region) }}" class="btn btn-sm btn-warning">Modifier</a>
                         <form action="{{ route('admin.regions.destroy', $region) }}" method="POST" class="d-inline"

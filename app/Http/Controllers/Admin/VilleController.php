@@ -11,7 +11,13 @@ class VilleController extends Controller
 {
     public function index()
     {
-        $villes = Ville::with('region')->get();
+        // $villes = Ville::with('region')->get();
+        // $villes = Ville::withCount('provinces')->with('region')->get();
+
+        $villes = Ville::withCount('provinces')->with(['provinces.etablissements'])->with('region')->get();
+
+
+
         return view('admin.villes.index', compact('villes'));
     }
 

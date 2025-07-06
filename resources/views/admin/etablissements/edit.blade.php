@@ -43,13 +43,24 @@
             <label for="nom" class="form-label">Nom</label>
             <input type="text" name="nom" id="nom" class="form-control" value="{{ $etablissement->nom }}" required>
         </div>
-
+{{--
         <div class="mb-3">
             <label for="ville_id" class="form-label">Ville</label>
             <select name="ville_id" id="ville_id" class="form-select" required>
                 @foreach($villes as $ville)
                     <option value="{{ $ville->id }}" {{ $etablissement->ville_id == $ville->id ? 'selected' : '' }}>
                         {{ $ville->nom }} — {{ $ville->region->nom }}
+                    </option>
+                @endforeach
+            </select>
+        </div> --}}
+
+        <div class="mb-3">
+            <label for="province_id" class="form-label">Province</label>
+            <select name="province_id" id="province_id" class="form-select" required>
+                @foreach($provinces as $province)
+                    <option value="{{ $province->id }}" {{ $etablissement->province_id == $province->id ? 'selected' : '' }}>
+                        {{ $province->nom }} — {{ $province->ville->nom }} — {{ $province->ville->region->nom }}
                     </option>
                 @endforeach
             </select>

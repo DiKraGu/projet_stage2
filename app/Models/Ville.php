@@ -15,7 +15,8 @@ class Ville extends Model
         return $this->belongsTo(Region::class);
     }
 
-    public function etablissements() {
-        return $this->hasMany(Etablissement::class);
+    public function provinces()
+    {
+        return $this->hasMany(Province::class);
     }
 }

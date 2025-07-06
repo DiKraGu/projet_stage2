@@ -42,6 +42,7 @@ use App\Http\Controllers\Admin\StockController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\VilleController;
+use App\Http\Controllers\Admin\ProvinceController;
 
 // Routes publiques (auth admin)
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -56,16 +57,15 @@ Route::middleware(['auth.admin'])->prefix('admin')->name('admin.')->group(functi
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('regions', RegionController::class);
+    Route::resource('villes', VilleController::class);
+    Route::resource('provinces', ProvinceController::class);
     Route::resource('etablissements', EtablissementController::class);
     Route::resource('fournisseurs', FournisseurController::class);
     Route::resource('produits', ProduitController::class);
     Route::resource('stocks', StockController::class);
     Route::resource('livraisons', LivraisonController::class);
     Route::resource('menus', MenuController::class);
-    Route::resource('villes', VilleController::class);
 
-
-    // Route::get('statistiques', [StatistiqueController::class, 'index'])->name('statistiques.index');
 });
 
 

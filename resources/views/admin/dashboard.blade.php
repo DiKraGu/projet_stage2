@@ -9,15 +9,34 @@
         <div class="col-md-3">
             <div class="card text-bg-primary mb-3">
                 <div class="card-body">
-                    <h5 class="card-title">📍 Régions</h5>
+                    <h5 class="card-title">Régions</h5>
                     <p class="card-text fs-2">{{ $nbRegions }}</p>
                 </div>
             </div>
         </div>
+
+        <div class="col-md-3">
+            <div class="card text-bg-info mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Villes</h5>
+                    <p class="card-text fs-2">{{ $nbVilles }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-bg-info mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Provinces</h5>
+                    <p class="card-text fs-2">{{ $nbProvinces }}</p>
+                </div>
+            </div>
+        </div>
+
         <div class="col-md-3">
             <div class="card text-bg-success mb-3">
                 <div class="card-body">
-                    <h5 class="card-title">🏢 Établissements</h5>
+                    <h5 class="card-title">Établissements</h5>
                     <p class="card-text fs-2">{{ $nbEtablissements }}</p>
                 </div>
             </div>
@@ -25,7 +44,7 @@
         <div class="col-md-3">
             <div class="card text-bg-warning mb-3">
                 <div class="card-body">
-                    <h5 class="card-title">🧾 Fournisseurs</h5>
+                    <h5 class="card-title">Fournisseurs</h5>
                     <p class="card-text fs-2">{{ $nbFournisseurs }}</p>
                 </div>
             </div>
@@ -33,18 +52,11 @@
         <div class="col-md-3">
             <div class="card text-bg-danger mb-3">
                 <div class="card-body">
-                    <h5 class="card-title">📋 Produits</h5>
+                    <h5 class="card-title">Produits</h5>
                     <p class="card-text fs-2">{{ $nbProduits }}</p>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-        <div class="card text-bg-info mb-3">
-            <div class="card-body">
-                <h5 class="card-title">🏙️ Villes</h5>
-                <p class="card-text fs-2">{{ $nbVilles }}</p>
-            </div>
-        </div>
-</div>
+
     </div>
 @endsection

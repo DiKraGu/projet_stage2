@@ -85,6 +85,13 @@
                         <span class="nav-text">Villes</span>
                     </a>
                 </li>
+
+                <li class="nav-item px-3">
+                    <a href="{{ route('admin.provinces.index') }}" class="nav-link">
+                        <span class="nav-text">Provinces</span>
+                    </a>
+                </li>
+
                 <li class="nav-item px-3">
                     <a href="{{ route('admin.etablissements.index') }}" class="nav-link">
                         <span class="nav-text">Établissements</span>

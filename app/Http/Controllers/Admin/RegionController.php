@@ -63,13 +63,15 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Region;
 use Illuminate\Http\Request;
-
+ 
 class RegionController extends Controller
 {
     public function index()
     {
         // Charger les régions avec le nombre d'établissements via les villes
-    $regions = Region::withCount(['villes', 'etablissements'])->get();
+    // $regions = Region::withCount(['villes', 'etablissements'])->get();
+        $regions = Region::withCount('villes')->with(['villes.provinces.etablissements'])->get();
+
         return view('admin.regions.index', compact('regions'));
     }
 
