@@ -1,63 +1,5 @@
 <?php
 
-// namespace App\Http\Controllers\Admin;
-
-// use App\Http\Controllers\Controller;
-// use App\Models\Region;
-// use Illuminate\Http\Request;
-
-// class RegionController extends Controller
-// {
-//     public function index()
-//     {
-//         $regions = Region::withCount('etablissements')->get();
-//         return view('admin.regions.index', compact('regions'));
-//     }
-
-//     public function create()
-//     {
-//         return view('admin.regions.create');
-//     }
-
-//     public function store(Request $request)
-//     {
-//         $request->validate([
-//             'nom' => 'required|string|unique:regions,nom',
-//         ]);
-
-//         Region::create([
-//             'nom' => $request->nom,
-//         ]);
-
-//         return redirect()->route('admin.regions.index')->with('success', 'Région ajoutée');
-//     }
-
-//     public function edit(Region $region)
-//     {
-//         return view('admin.regions.edit', compact('region'));
-//     }
-
-//     public function update(Request $request, Region $region)
-//     {
-//         $request->validate([
-//             'nom' => 'required|string|unique:regions,nom,' . $region->id,
-//         ]);
-
-//         $region->update([
-//             'nom' => $request->nom,
-//         ]);
-
-//         return redirect()->route('admin.regions.index')->with('success', 'Région modifiée');
-//     }
-
-//     public function destroy(Region $region)
-//     {
-//         $region->delete();
-//         return redirect()->route('admin.regions.index')->with('success', 'Région supprimée');
-//     }
-// }
-
-
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
@@ -84,7 +26,12 @@ class RegionController extends Controller
     {
         $request->validate([
             'nom' => 'required|string|unique:regions,nom',
+        ], [
+            'nom.unique' => 'Cette région existe déjà.',
+            'nom.required' => 'Le nom de la région est obligatoire.',
         ]);
+
+
 
         Region::create([
             'nom' => $request->nom,
@@ -102,6 +49,9 @@ class RegionController extends Controller
     {
         $request->validate([
             'nom' => 'required|string|unique:regions,nom,' . $region->id,
+        ], [
+            'nom.unique' => 'Une autre région porte déjà ce nom.',
+            'nom.required' => 'Le nom de la région est obligatoire.',
         ]);
 
         $region->update([
