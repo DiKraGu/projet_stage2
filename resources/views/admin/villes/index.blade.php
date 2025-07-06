@@ -59,8 +59,9 @@
                     <td>{{ $ville->provinces->flatMap->etablissements->count() }}</td>
                     <td>
                         <a href="{{ route('admin.villes.edit', $ville) }}" class="btn btn-sm btn-warning">Modifier</a>
-                        <form action="{{ route('admin.villes.destroy', $ville) }}" method="POST" class="d-inline">
-                            @csrf @method('DELETE')
+                        <form action="{{ route('admin.villes.destroy', $ville) }}" method="POST" class="d-inline" onsubmit="return confirm('Confirmer la suppression ?')">
+                            @csrf
+                            @method('DELETE')
                             <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
                         </form>
                     </td>
