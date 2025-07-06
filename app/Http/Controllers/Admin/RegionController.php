@@ -63,7 +63,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Region;
 use Illuminate\Http\Request;
- 
+
 class RegionController extends Controller
 {
     public function index()
@@ -92,7 +92,7 @@ class RegionController extends Controller
 
         return redirect()->route('admin.regions.index')->with('success', 'Région ajoutée');
     }
-
+ 
     public function edit(Region $region)
     {
         return view('admin.regions.edit', compact('region'));
