@@ -14,7 +14,7 @@ class ProvinceController extends Controller
         // $provinces = Province::with('ville.region')->get();
         $provinces = Province::with('ville.region')
         ->withCount('etablissements') // ← ajoute ce lien
-        ->get();
+        ->paginate(10);
         return view('admin.provinces.index', compact('provinces'));
     }
 

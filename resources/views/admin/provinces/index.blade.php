@@ -41,4 +41,8 @@
             @endforeach
         </tbody>
     </table>
+
+    <div class="d-flex justify-content-end mt-4">
+        {{ $provinces->withQueryString()->links() }}
+    </div>
 @endsection
