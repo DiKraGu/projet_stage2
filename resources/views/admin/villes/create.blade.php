@@ -9,8 +9,25 @@
         @csrf
 
         <div class="mb-3">
-            <label for="nom" class="form-label">Nom</label>
-            <input type="text" class="form-control" id="nom" name="nom" required>
+            <label for="nom" class="form-label">Ville</label>
+            <select name="nom" id="nom" class="form-select" required>
+                <option value="">-- Choisir une ville --</option>
+                <option value="Casablanca">Casablanca</option>
+                <option value="Rabat">Rabat</option>
+                <option value="Fès">Fès</option>
+                <option value="Marrakech">Marrakech</option>
+                <option value="Tanger">Tanger</option>
+                <option value="Agadir">Agadir</option>
+                <option value="Meknès">Meknès</option>
+                <option value="Oujda">Oujda</option>
+                <option value="Tétouan">Tétouan</option>
+                <option value="El Jadida">El Jadida</option>
+                <option value="Safi">Safi</option>
+                <option value="Khouribga">Khouribga</option>
+                <option value="Laâyoune">Laâyoune</option>
+                <option value="Errachidia">Errachidia</option>
+                <option value="Beni Mellal">Beni Mellal</option>
+            </select>
         </div>
 
         <div class="mb-3">

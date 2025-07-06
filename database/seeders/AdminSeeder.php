@@ -14,11 +14,13 @@ class AdminSeeder extends Seeder
      */
     public function run(): void
     {
-        Admin::create([
-            'nom' => 'admin2',
-            'prenom' => 'admin',
-            'email' => 'admin2@gmail.com',
-            'password' => Hash::make('admin2@gmail.com'), // Tu peux changer ce mot de passe
-        ]);
+        Admin::firstOrCreate(
+            ['email' => 'admin2@gmail.com'],
+            [
+                'nom' => 'admin',
+                'prenom' => 'admin',
+                'password' => Hash::make('password') // remplace si besoin
+            ]
+        );
     }
 }
