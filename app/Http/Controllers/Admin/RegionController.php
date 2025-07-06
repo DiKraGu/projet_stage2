@@ -70,7 +70,7 @@ class RegionController extends Controller
     {
         // Charger les régions avec le nombre d'établissements via les villes
     // $regions = Region::withCount(['villes', 'etablissements'])->get();
-        $regions = Region::withCount('villes')->with(['villes.provinces.etablissements'])->get();
+        $regions = Region::withCount('villes')->with(['villes.provinces.etablissements'])->paginate(10);
 
         return view('admin.regions.index', compact('regions'));
     }
@@ -92,7 +92,7 @@ class RegionController extends Controller
 
         return redirect()->route('admin.regions.index')->with('success', 'Région ajoutée');
     }
- 
+
     public function edit(Region $region)
     {
         return view('admin.regions.edit', compact('region'));

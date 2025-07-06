@@ -64,7 +64,7 @@
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody> 
+        <tbody>
             @foreach($regions as $region)
                 <tr>
                     <td>{{ $region->nom }}</td>
@@ -86,5 +86,10 @@
             @endforeach
         </tbody>
     </table>
+
+    <div class="d-flex justify-content-end mt-4">
+        {{ $regions->withQueryString()->links() }}
+    </div>
+
 @endsection
 
