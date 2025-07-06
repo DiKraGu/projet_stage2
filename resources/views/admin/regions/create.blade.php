@@ -24,7 +24,7 @@
 @section('content')
     <h2>Ajouter une région</h2>
 
-    @if ($errors->any())
+    {{-- @if ($errors->any())
         <div class="alert alert-danger">
             <ul class="mb-0">
                 @foreach ($errors->all() as $error)
@@ -32,7 +32,7 @@
                 @endforeach
             </ul>
         </div>
-    @endif
+    @endif --}}
 
     <form action="{{ route('admin.regions.store') }}" method="POST">
         @csrf
@@ -53,7 +53,14 @@
                 <option value="Laâyoune-Sakia El Hamra">Laâyoune-Sakia El Hamra</option>
                 <option value="Dakhla-Oued Ed-Dahab">Dakhla-Oued Ed-Dahab</option>
             </select>
+
+            @error('nom')
+                <div class="text-danger mt-1">{{ $message }}</div>
+            @enderror
+            
         </div>
+
+
 
         <button type="submit" class="btn btn-success">Ajouter</button>
         <a href="{{ route('admin.regions.index') }}" class="btn btn-secondary">Annuler</a>
