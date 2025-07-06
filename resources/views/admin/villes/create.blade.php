@@ -24,9 +24,13 @@
             <select name="nom" id="nom" class="form-select" required>
                 <option value="">-- Choisir une ville --</option>
                 @foreach([
-                    'Casablanca', 'Rabat', 'Fès', 'Marrakech', 'Tanger',
-                    'Agadir', 'Meknès', 'Oujda', 'Tétouan', 'El Jadida',
-                    'Safi', 'Khouribga', 'Laâyoune', 'Errachidia', 'Beni Mellal'
+                    'Rabat',
+                    'Salé',
+                    'Skhirate-Témara',
+                    'Kénitra',
+                    'Khémisset',
+                    'Sidi Kacem',
+                    'Sidi Slimane'
                 ] as $villeNom)
                     <option value="{{ $villeNom }}" {{ old('nom') === $villeNom ? 'selected' : '' }}>
                         {{ $villeNom }}
