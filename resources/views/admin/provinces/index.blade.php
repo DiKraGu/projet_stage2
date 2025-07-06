@@ -18,6 +18,7 @@
                 <th>Nom</th>
                 <th>Ville</th>
                 <th>Région</th>
+                <th>Nombre d'établissements</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -27,6 +28,7 @@
                     <td>{{ $province->nom }}</td>
                     <td>{{ $province->ville->nom }}</td>
                     <td>{{ $province->ville->region->nom }}</td>
+                    <td>{{ $province->etablissements_count }}</td>
                     <td>
                         <a href="{{ route('admin.provinces.edit', $province) }}" class="btn btn-sm btn-warning">Modifier</a>
                         <form action="{{ route('admin.provinces.destroy', $province) }}" method="POST" class="d-inline" onsubmit="return confirm('Confirmer la suppression ?')">

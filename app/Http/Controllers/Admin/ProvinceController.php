@@ -11,7 +11,10 @@ class ProvinceController extends Controller
 {
     public function index()
     {
-        $provinces = Province::with('ville.region')->get();
+        // $provinces = Province::with('ville.region')->get();
+        $provinces = Province::with('ville.region')
+        ->withCount('etablissements') // ← ajoute ce lien
+        ->get();
         return view('admin.provinces.index', compact('provinces'));
     }
 
@@ -53,7 +56,6 @@ class ProvinceController extends Controller
             'nom' => $request->nom,
             'ville_id' => $request->ville_id,
         ]);
-
         return redirect()->route('admin.provinces.index')->with('success', 'Province mise à jour avec succès.');
     }
 
