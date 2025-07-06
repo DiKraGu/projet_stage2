@@ -8,14 +8,27 @@ use Illuminate\Http\Request;
 
 class RegionController extends Controller
 {
-    public function index()
-    {
-        // Charger les régions avec le nombre d'établissements via les villes
-    // $regions = Region::withCount(['villes', 'etablissements'])->get();
-        $regions = Region::withCount('villes')->with(['villes.provinces.etablissements'])->paginate(10);
+    // public function index()
+    // {
+    //     // Charger les régions avec le nombre d'établissements via les villes
+    // // $regions = Region::withCount(['villes', 'etablissements'])->get();
+    //     $regions = Region::withCount('villes')->with(['villes.provinces.etablissements'])->paginate(10);
 
-        return view('admin.regions.index', compact('regions'));
+    //     return view('admin.regions.index', compact('regions'));
+    // }
+
+    public function index(Request $request)
+{
+    $query = Region::withCount('villes')->with(['villes.provinces.etablissements']);
+
+    if ($request->filled('search')) {
+        $query->where('nom', 'like', '%' . $request->search . '%');
     }
+
+    $regions = $query->paginate(10);
+
+    return view('admin.regions.index', compact('regions'));
+}
 
     public function create()
     {
@@ -30,7 +43,6 @@ class RegionController extends Controller
             'nom.unique' => 'Cette région existe déjà.',
             'nom.required' => 'Le nom de la région est obligatoire.',
         ]);
-
 
 
         Region::create([

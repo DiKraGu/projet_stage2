@@ -54,6 +54,11 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
+    <form method="GET" action="{{ route('admin.regions.index') }}" class="mb-3 d-flex justify-content-start">
+        <input type="text" name="search" value="{{ request('search') }}" class="form-control w-25 me-2" placeholder="Rechercher une région...">
+        <button type="submit" class="btn btn-primary">Rechercher</button>
+    </form>
+
     <table class="table table-bordered">
         <thead>
             <tr>
