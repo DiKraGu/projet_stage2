@@ -75,6 +75,10 @@
                     <option value="Ameur Chamalia">Ameur Chamalia</option>
                 </optgroup>
             </select>
+
+            @error('nom')
+                <div class="text-danger mt-1">{{ $message }}</div>
+            @enderror
         </div>
 
         <div class="mb-3">
