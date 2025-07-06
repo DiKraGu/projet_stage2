@@ -12,10 +12,31 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    <form method="GET" action="{{ route('admin.provinces.index') }}" class="mb-3 d-flex justify-content-start">
-        <input type="text" name="search" value="{{ request('search') }}" class="form-control w-25 me-2" placeholder="Rechercher une province...">
-        <button type="submit" class="btn btn-outline-primary">Rechercher</button>
-    </form>
+<form method="GET" action="{{ route('admin.provinces.index') }}" class="mb-3 d-flex gap-2 align-items-center">
+
+    <input type="text" name="search" value="{{ request('search') }}" class="form-control w-25" placeholder="Rechercher une province...">
+    <button type="submit" class="btn btn-outline-primary me-5">Rechercher</button>
+
+
+    <select name="ville_id" class="form-select w-25" onchange="this.form.submit()">
+        <option value="">-- Toutes les villes --</option>
+        @foreach($villes as $ville)
+            <option value="{{ $ville->id }}" {{ request('ville_id') == $ville->id ? 'selected' : '' }}>
+                {{ $ville->nom }}
+            </option>
+        @endforeach
+    </select>
+
+    <select name="region_id" class="form-select w-25" onchange="this.form.submit()">
+        <option value="">-- Toutes les régions --</option>
+        @foreach($regions as $region)
+            <option value="{{ $region->id }}" {{ request('region_id') == $region->id ? 'selected' : '' }}>
+                {{ $region->nom }}
+            </option>
+        @endforeach
+    </select>
+
+</form>
 
 
 

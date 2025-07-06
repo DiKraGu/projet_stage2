@@ -4,22 +4,31 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Province;
+use App\Models\Region;
 use App\Models\Ville;
 use Illuminate\Http\Request;
 
 class ProvinceController extends Controller
 {
-    // public function index()
-    // {
-    //     // $provinces = Province::with('ville.region')->get();
-    //     $provinces = Province::with('ville.region')
-    //     ->withCount('etablissements') // ← ajoute ce lien
-    //     ->paginate(10);
-    //     return view('admin.provinces.index', compact('provinces'));
-    // }
+//     public function index(Request $request)
+// {
+//     $query = Province::with('ville.region')
+//         ->withCount('etablissements');
 
-    public function index(Request $request)
+//     if ($request->filled('search')) {
+//         $query->where('nom', 'LIKE', '%' . $request->search . '%');
+//     }
+
+//     $provinces = $query->paginate(10);
+
+//     return view('admin.provinces.index', compact('provinces'));
+// }
+
+public function index(Request $request)
 {
+    $villes = Ville::has('provinces')->orderBy('nom')->get();
+    $regions = Region::has('villes.provinces')->orderBy('nom')->get();
+
     $query = Province::with('ville.region')
         ->withCount('etablissements');
 
@@ -27,10 +36,21 @@ class ProvinceController extends Controller
         $query->where('nom', 'LIKE', '%' . $request->search . '%');
     }
 
+    if ($request->filled('ville_id')) {
+        $query->where('ville_id', $request->ville_id);
+    }
+
+    if ($request->filled('region_id')) {
+        $query->whereHas('ville.region', function ($q) use ($request) {
+            $q->where('id', $request->region_id);
+        });
+    }
+
     $provinces = $query->paginate(10);
 
-    return view('admin.provinces.index', compact('provinces'));
+    return view('admin.provinces.index', compact('provinces', 'villes', 'regions'));
 }
+
 
     public function create()
     {
@@ -38,20 +58,6 @@ class ProvinceController extends Controller
         return view('admin.provinces.create', compact('villes'));
     }
 
-    // public function store(Request $request)
-    // {
-    //     $request->validate([
-    //         'nom' => 'required|string',
-    //         'ville_id' => 'required|exists:villes,id',
-    //     ]);
-
-    //     Province::create([
-    //         'nom' => $request->nom,
-    //         'ville_id' => $request->ville_id,
-    //     ]);
-
-    //     return redirect()->route('admin.provinces.index')->with('success', 'Province ajoutée avec succès.');
-    // }
 
 public function store(Request $request)
 {
@@ -85,19 +91,6 @@ public function store(Request $request)
         return view('admin.provinces.edit', compact('province', 'villes'));
     }
 
-    // public function update(Request $request, Province $province)
-    // {
-    //     $request->validate([
-    //         'nom' => 'required|string',
-    //         'ville_id' => 'required|exists:villes,id',
-    //     ]);
-
-    //     $province->update([
-    //         'nom' => $request->nom,
-    //         'ville_id' => $request->ville_id,
-    //     ]);
-    //     return redirect()->route('admin.provinces.index')->with('success', 'Province mise à jour avec succès.');
-    // }
 
 public function update(Request $request, Province $province)
 {
