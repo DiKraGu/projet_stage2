@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Categorie;
 use App\Models\Etablissement;
 use App\Models\Fournisseur;
 use App\Models\Produit;
@@ -20,6 +21,8 @@ class DashboardController extends Controller
         $nbProduits = Produit::count();
         $nbVilles = Ville::count();
         $nbProvinces = Province::count();
+        $nbCategories = Categorie::count();
+
 
 
         return view('admin.dashboard', compact(
@@ -28,7 +31,8 @@ class DashboardController extends Controller
             'nbFournisseurs',
             'nbProduits',
             'nbVilles',
-            'nbProvinces'
+            'nbProvinces',
+            'nbCategories'
         ));
     }
 }

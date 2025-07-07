@@ -52,6 +52,14 @@
         <div class="col-md-3">
             <div class="card text-bg-danger mb-3">
                 <div class="card-body">
+                    <h5 class="card-title">Categories</h5>
+                    <p class="card-text fs-2">{{ $nbCategories }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-bg-danger mb-3">
+                <div class="card-body">
                     <h5 class="card-title">Produits</h5>
                     <p class="card-text fs-2">{{ $nbProduits }}</p>
                 </div>
