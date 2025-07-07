@@ -8,6 +8,15 @@
         <a href="{{ route('admin.produits.create') }}" class="btn btn-primary">Ajouter produit</a>
     </div>
 
+    @if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+
+    <form method="GET" action="{{ route('admin.produits.index') }}" class="mb-3 d-flex justify-content-start">
+        <input type="text" name="search" value="{{ request('search') }}" class="form-control w-25 me-2" placeholder="Rechercher un produit...">
+        <button type="submit" class="btn btn-outline-primary">Rechercher</button>
+    </form>
+
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -40,4 +49,8 @@
             @endforeach
         </tbody>
     </table>
+
+    <div class="d-flex justify-content-end mt-4">
+        {{ $produits->withQueryString()->links() }}
+    </div>
 @endsection
