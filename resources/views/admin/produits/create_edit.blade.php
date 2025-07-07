@@ -20,6 +20,17 @@
         </div>
 
         <div class="mb-3">
+            <select name="categorie_id" class="form-select" required>
+                <option value="">-- Choisir une catégorie --</option>
+                @foreach($categories as $categorie)
+                    <option value="{{ $categorie->id }}" {{ old('categorie_id', $produit->categorie_id ?? '') == $categorie->id ? 'selected' : '' }}>
+                        {{ $categorie->nom }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="mb-3">
             <label for="fournisseur_id" class="form-label">Fournisseur</label>
             <select name="fournisseur_id" class="form-control" required>
                 @foreach($fournisseurs as $fournisseur)
