@@ -21,36 +21,68 @@ class CategorieController extends Controller
         return view('admin.categories.create_edit');
     }
 
+    // public function store(Request $request)
+    // {
+    //     $request->validate([
+    //         'nom' => 'required|string|unique:categories,nom|max:255',
+    //     ]);
+
+    //     Categorie::create([
+    //         'nom' => $request->nom,
+    //     ]);
+
+    //     return redirect()->route('admin.categories.index')->with('success', 'Catégorie ajoutée.');
+    // }
+
     public function store(Request $request)
-    {
-        $request->validate([
-            'nom' => 'required|string|unique:categories,nom|max:255',
-        ]);
+{
+    $request->validate([
+        'nom' => 'required|string|max:255|unique:categories,nom',
+    ], [
+        'nom.unique' => 'Une catégorie avec ce nom existe déjà.',
+    ]);
 
-        Categorie::create([
-            'nom' => $request->nom,
-        ]);
+    Categorie::create([
+        'nom' => $request->nom,
+    ]);
 
-        return redirect()->route('admin.categories.index')->with('success', 'Catégorie ajoutée.');
-    }
+    return redirect()->route('admin.categories.index')->with('success', 'Catégorie ajoutée.');
+}
+
 
     public function edit(Categorie $category)
     {
         return view('admin.categories.create_edit', ['categorie' => $category]);
     }
 
+    // public function update(Request $request, Categorie $category)
+    // {
+    //     $request->validate([
+    //         'nom' => 'required|string|max:255|unique:categories,nom,' . $category->id,
+    //     ]);
+
+    //     $category->update([
+    //         'nom' => $request->nom,
+    //     ]);
+
+    //     return redirect()->route('admin.categories.index')->with('success', 'Catégorie mise à jour.');
+    // }
+
     public function update(Request $request, Categorie $category)
-    {
-        $request->validate([
-            'nom' => 'required|string|max:255|unique:categories,nom,' . $category->id,
-        ]);
+{
+    $request->validate([
+        'nom' => 'required|string|max:255|unique:categories,nom,' . $category->id,
+    ], [
+        'nom.unique' => 'Une autre catégorie avec ce nom existe déjà.',
+    ]);
 
-        $category->update([
-            'nom' => $request->nom,
-        ]);
+    $category->update([
+        'nom' => $request->nom,
+    ]);
 
-        return redirect()->route('admin.categories.index')->with('success', 'Catégorie mise à jour.');
-    }
+    return redirect()->route('admin.categories.index')->with('success', 'Catégorie mise à jour.');
+}
+
 
     public function destroy(Categorie $category)
     {
