@@ -8,6 +8,10 @@
         <a href="{{ route('admin.fournisseurs.create') }}" class="btn btn-primary">Ajouter fournisseur</a>
     </div>
 
+    @if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -29,13 +33,22 @@
                     </td>
                     <td>
                         <a href="{{ route('admin.fournisseurs.edit', $fournisseur) }}" class="btn btn-sm btn-warning">Modifier</a>
-                        <form action="{{ route('admin.fournisseurs.destroy', $fournisseur) }}" method="POST" class="d-inline">
+                        <form action="{{ route('admin.fournisseurs.destroy', $fournisseur) }}" method="POST" class="d-inline" onsubmit="return confirm('Confirmer la suppression ?')">
                             @csrf @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
+                            {{-- <button type="submit" class="btn btn-sm btn-danger">Supprimer</button> --}}
+                            <button class="btn btn-sm btn-danger">Supprimer</button>
+
                         </form>
+
+
                     </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
+
+    <div class="d-flex justify-content-end mt-4">
+        {{ $fournisseurs->withQueryString()->links() }}
+    </div>
+
 @endsection

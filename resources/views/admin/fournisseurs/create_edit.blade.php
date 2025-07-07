@@ -12,12 +12,21 @@
         <div class="mb-3">
             <label for="nom" class="form-label">Nom</label>
             <input type="text" name="nom" class="form-control" value="{{ old('nom', $fournisseur->nom ?? '') }}" required>
+
+            @error('nom')
+                <div class="text-danger mt-1">{{ $message }}</div>
+            @enderror
         </div>
 
         <div class="mb-3">
             <label for="contact" class="form-label">Contact</label>
             <input type="text" name="contact" class="form-control" value="{{ old('contact', $fournisseur->contact ?? '') }}">
+
+            @error('contact')
+                <div class="text-danger mt-1">{{ $message }}</div>
+            @enderror
         </div>
+
 
         <button type="submit" class="btn btn-success">Enregistrer</button>
     </form>
