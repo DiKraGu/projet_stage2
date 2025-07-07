@@ -9,10 +9,23 @@ use Illuminate\Http\Request;
 class CategorieController extends Controller
 {
 
-    public function index()
+//     public function index()
+// {
+//     // On récupère les catégories avec le nombre de produits
+//     $categories = \App\Models\Categorie::withCount('produits')->paginate(10);
+//     return view('admin.categories.index', compact('categories'));
+// }
+
+public function index(Request $request)
 {
-    // On récupère les catégories avec le nombre de produits
-    $categories = \App\Models\Categorie::withCount('produits')->paginate(10);
+    $query = Categorie::withCount('produits');
+
+    if ($request->filled('search')) {
+        $query->where('nom', 'like', '%' . $request->search . '%');
+    }
+
+    $categories = $query->paginate(10)->withQueryString();
+
     return view('admin.categories.index', compact('categories'));
 }
 
