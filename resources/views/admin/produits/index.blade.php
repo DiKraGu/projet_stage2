@@ -13,6 +13,7 @@
             <tr>
                 <th>Nom</th>
                 <th>Description</th>
+                <th>Catégorie</th>
                 <th>Fournisseur</th>
                 <th>Actions</th>
             </tr>
@@ -22,6 +23,7 @@
                 <tr>
                     <td>{{ $produit->nom }}</td>
                     <td>{{ $produit->description }}</td>
+                    <td>{{ $produit->categorie->nom ?? '-' }}</td>
                     <td>{{ $produit->fournisseur->nom }}</td>
                     <td>
                         <a href="{{ route('admin.produits.edit', $produit) }}" class="btn btn-sm btn-warning">Modifier</a>
