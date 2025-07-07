@@ -1,64 +1,5 @@
 <?php
 
-// namespace App\Http\Controllers\Admin;
-
-// use App\Http\Controllers\Controller;
-// use App\Models\Etablissement;
-// use App\Models\Ville;
-// use Illuminate\Http\Request;
-
-// class EtablissementController extends Controller
-// {
-//     public function index()
-//     {
-//         // On récupère aussi la ville et sa région via les relations
-//         // $etablissements = Etablissement::with('ville.region')->get();
-//         $etablissements = Etablissement::with('province.ville.region')->get();
-
-//         return view('admin.etablissements.index', compact('etablissements'));
-//     }
-
-//     public function create()
-//     {
-//         $villes = Ville::with('region')->get();
-//         return view('admin.etablissements.create', compact('villes'));
-//     }
-
-//     public function store(Request $request)
-//     {
-//         $request->validate([
-//             'nom' => 'required|string',
-//             'ville_id' => 'required|exists:villes,id',
-//         ]);
-
-//         Etablissement::create($request->only(['nom', 'ville_id']));
-//         return redirect()->route('admin.etablissements.index')->with('success', 'Établissement ajouté');
-//     }
-
-//     public function edit(Etablissement $etablissement)
-//     {
-//         $villes = Ville::with('region')->get();
-//         return view('admin.etablissements.edit', compact('etablissement', 'villes'));
-//     }
-
-//     public function update(Request $request, Etablissement $etablissement)
-//     {
-//         $request->validate([
-//             'nom' => 'required|string',
-//             'ville_id' => 'required|exists:villes,id',
-//         ]);
-
-//         $etablissement->update($request->only(['nom', 'ville_id']));
-//         return redirect()->route('admin.etablissements.index')->with('success', 'Établissement modifié');
-//     }
-
-//     public function destroy(Etablissement $etablissement)
-//     {
-//         $etablissement->delete();
-//         return redirect()->route('admin.etablissements.index')->with('success', 'Établissement supprimé');
-//     }
-// }
-
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
@@ -68,12 +9,20 @@ use Illuminate\Http\Request;
 
 class EtablissementController extends Controller
 {
-    public function index()
-    {
-        // Charger les relations jusqu'à la région pour chaque établissement
-        $etablissements = Etablissement::with('province.ville.region')->get();
-        return view('admin.etablissements.index', compact('etablissements'));
+
+    public function index(Request $request)
+{
+    $query = Etablissement::with('province.ville.region');
+
+    if ($request->filled('search')) {
+        $query->where('nom', 'like', '%' . $request->search . '%');
     }
+
+    $etablissements = $query->paginate(10); // ou paginate(10) si tu veux de la pagination
+
+    return view('admin.etablissements.index', compact('etablissements'));
+}
+
 
     public function create()
     {

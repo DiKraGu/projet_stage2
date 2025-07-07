@@ -13,6 +13,11 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
+    <form method="GET" action="{{ route('admin.etablissements.index') }}" class="mb-3 d-flex gap-2 align-items-center">
+        <input type="text" name="search" value="{{ request('search') }}" class="form-control w-25" placeholder="Rechercher un établissement...">
+        <button type="submit" class="btn btn-outline-primary">Rechercher</button>
+    </form>
+
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -43,4 +48,9 @@
             @endforeach
         </tbody>
     </table>
+
+    <div class="d-flex justify-content-end mt-4">
+        {{ $etablissements->withQueryString()->links() }}
+    </div>
+
 @endsection
