@@ -11,21 +11,50 @@ use Illuminate\Http\Request;
 
 class ProduitController extends Controller
 {
+
+// public function index(Request $request)
+// {
+//     $query = Produit::with(['fournisseur', 'categorie']);
+
+//     // if ($request->has('search') && !empty($request->search)) {
+//     //     $query->where('nom', 'LIKE', '%' . $request->search . '%');
+//     // }
+
+//     if ($request->filled('search')) {
+//         $query->where('nom', 'like', '%' . $request->search . '%');
+//     }
+
+//     $produits = $query->paginate(10);
+
+//     return view('admin.produits.index', compact('produits'));
+// }
+
 public function index(Request $request)
 {
     $query = Produit::with(['fournisseur', 'categorie']);
 
-    // if ($request->has('search') && !empty($request->search)) {
-    //     $query->where('nom', 'LIKE', '%' . $request->search . '%');
-    // }
-
+    // Recherche par nom
     if ($request->filled('search')) {
         $query->where('nom', 'like', '%' . $request->search . '%');
     }
 
+    // Filtrage par catégorie
+    if ($request->filled('categorie_id')) {
+        $query->where('categorie_id', $request->categorie_id);
+    }
+
+    // Filtrage par fournisseur
+    if ($request->filled('fournisseur_id')) {
+        $query->where('fournisseur_id', $request->fournisseur_id);
+    }
+
     $produits = $query->paginate(10);
 
-    return view('admin.produits.index', compact('produits'));
+    // Récupérer uniquement les catégories/fournisseurs ayant des produits
+    $categories = \App\Models\Categorie::whereHas('produits')->get();
+    $fournisseurs = \App\Models\Fournisseur::whereHas('produits')->get();
+
+    return view('admin.produits.index', compact('produits', 'categories', 'fournisseurs'));
 }
 
 

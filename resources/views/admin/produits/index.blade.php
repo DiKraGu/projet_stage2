@@ -12,9 +12,34 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    <form method="GET" action="{{ route('admin.produits.index') }}" class="mb-3 d-flex justify-content-start">
-        <input type="text" name="search" value="{{ request('search') }}" class="form-control w-25 me-2" placeholder="Rechercher un produit...">
-        <button type="submit" class="btn btn-outline-primary">Rechercher</button>
+    <form method="GET" action="{{ route('admin.produits.index') }}" class="mb-3 d-flex gap-2 align-items-center flex-wrap">
+
+        {{-- Recherche --}}
+        <input type="text" name="search" value="{{ request('search') }}" class="form-control w-25" placeholder="Rechercher un produit...">
+
+        {{-- Bouton Recherche --}}
+        <button type="submit" class="btn btn-outline-primary me-5">Rechercher</button>
+
+        {{-- Filtre Catégorie (auto submit) --}}
+        <select name="categorie_id" class="form-select w-25" onchange="this.form.submit()">
+            <option value="">-- Toutes les catégories --</option>
+            @foreach($categories as $categorie)
+                <option value="{{ $categorie->id }}" {{ request('categorie_id') == $categorie->id ? 'selected' : '' }}>
+                    {{ $categorie->nom }}
+                </option>
+            @endforeach
+        </select>
+
+        {{-- Filtre Fournisseur (auto submit) --}}
+        <select name="fournisseur_id" class="form-select w-25" onchange="this.form.submit()">
+            <option value="">-- Tous les fournisseurs --</option>
+            @foreach($fournisseurs as $fournisseur)
+                <option value="{{ $fournisseur->id }}" {{ request('fournisseur_id') == $fournisseur->id ? 'selected' : '' }}>
+                    {{ $fournisseur->nom }}
+                </option>
+            @endforeach
+        </select>
+
     </form>
 
     <table class="table table-bordered">
@@ -41,9 +66,6 @@
                             @method('DELETE')
                             <button class="btn btn-sm btn-danger">Supprimer</button>
                         </form>
-
-
-
                     </td>
                 </tr>
             @endforeach
