@@ -12,6 +12,9 @@
         <div class="mb-3">
             <label for="nom" class="form-label">Nom</label>
             <input type="text" name="nom" class="form-control" value="{{ old('nom', $produit->nom ?? '') }}" required>
+                        @error('nom')
+                <div class="text-danger mt-1">{{ $message }}</div>
+            @enderror
         </div>
 
         <div class="mb-3">
