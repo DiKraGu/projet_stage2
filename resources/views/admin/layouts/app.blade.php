@@ -108,6 +108,11 @@
                         </a>
                     </li>
                     <li class="nav-item px-3">
+                        <a href="{{ route('admin.categories.index') }}" class="nav-link">
+                            <span class="nav-text">Categories des produits</span>
+                        </a>
+                    </li>
+                    <li class="nav-item px-3">
                         <a href="{{ route('admin.produits.index') }}" class="nav-link">
                             <span class="nav-text">Produits</span>
                         </a>
