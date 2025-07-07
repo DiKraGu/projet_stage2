@@ -12,6 +12,12 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
+    <form method="GET" action="{{ route('admin.fournisseurs.index') }}" class="mb-3 d-flex gap-2 align-items-center">
+        <input type="text" name="search" class="form-control w-25" placeholder="Rechercher par nom ou contact..." value="{{ request('search') }}">
+        <button type="submit" class="btn btn-outline-primary">Rechercher</button>
+    </form>
+
+
     <table class="table table-bordered">
         <thead>
             <tr>

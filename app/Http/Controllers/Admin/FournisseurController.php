@@ -7,11 +7,28 @@ use Illuminate\Http\Request;
 
 class FournisseurController extends Controller
 {
-    public function index()
-    {
-        $fournisseurs = Fournisseur::with('produits')->paginate(10);
-        return view('admin.fournisseurs.index', compact('fournisseurs'));
+    // public function index()
+    // {
+    //     $fournisseurs = Fournisseur::with('produits')->paginate(10);
+    //     return view('admin.fournisseurs.index', compact('fournisseurs'));
+    // }
+
+    public function index(Request $request)
+{
+    $query = Fournisseur::with('produits');
+
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->where(function ($q) use ($search) {
+            $q->where('nom', 'like', "%$search%")
+              ->orWhere('contact', 'like', "%$search%");
+        });
     }
+
+    $fournisseurs = $query->paginate(10);
+
+    return view('admin.fournisseurs.index', compact('fournisseurs'));
+}
 
     public function create()
     {
