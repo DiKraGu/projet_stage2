@@ -27,11 +27,14 @@
                     <td>{{ $produit->fournisseur->nom }}</td>
                     <td>
                         <a href="{{ route('admin.produits.edit', $produit) }}" class="btn btn-sm btn-warning">Modifier</a>
-                        <form action="{{ route('admin.produits.destroy', $produit) }}" method="POST" class="d-inline">
+                        <form action="{{ route('admin.produits.destroy', $produit) }}" method="POST" class="d-inline" onsubmit="return confirm('Confirmer la suppression ?')">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
+                            <button class="btn btn-sm btn-danger">Supprimer</button>
                         </form>
+
+
+
                     </td>
                 </tr>
             @endforeach
