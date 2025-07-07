@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
             FournisseurSeeder::class,
             CategorieSeeder::class,
+            ProduitSeeder::class,
 
 
             // RegionSeeder::class,
