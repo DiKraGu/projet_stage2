@@ -5,24 +5,63 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Etablissement;
 use App\Models\Province;
+use App\Models\Region;
+use App\Models\Ville;
 use Illuminate\Http\Request;
 
 class EtablissementController extends Controller
 {
 
-    public function index(Request $request)
+//     public function index(Request $request)
+// {
+//     $query = Etablissement::with('province.ville.region');
+
+//     if ($request->filled('search')) {
+//         $query->where('nom', 'like', '%' . $request->search . '%');
+//     }
+
+//     $etablissements = $query->paginate(10); // ou paginate(10) si tu veux de la pagination
+
+//     return view('admin.etablissements.index', compact('etablissements'));
+// }
+
+public function index(Request $request)
 {
     $query = Etablissement::with('province.ville.region');
 
+    // Filtrage par nom
     if ($request->filled('search')) {
         $query->where('nom', 'like', '%' . $request->search . '%');
     }
 
-    $etablissements = $query->paginate(10); // ou paginate(10) si tu veux de la pagination
+    // Filtrage par province
+    if ($request->filled('province_id')) {
+        $query->where('province_id', $request->province_id);
+    }
 
-    return view('admin.etablissements.index', compact('etablissements'));
+    // Filtrage par ville (via relation)
+    if ($request->filled('ville_id')) {
+        $query->whereHas('province.ville', function ($q) use ($request) {
+            $q->where('id', $request->ville_id);
+        });
+    }
+
+    // Filtrage par région (via relation)
+    if ($request->filled('region_id')) {
+        $query->whereHas('province.ville.region', function ($q) use ($request) {
+            $q->where('id', $request->region_id);
+        });
+    }
+
+    $etablissements = $query->paginate(10);
+
+    // Données pour les selects
+    $provinces = Province::has('etablissements')->with('ville')->get();
+    $villes = Ville::has('provinces.etablissements')->get();
+    $regions = Region::has('villes.provinces.etablissements')->get();
+
+    return view('admin.etablissements.index', compact('etablissements', 'provinces', 'villes', 'regions'));
 }
-
 
     public function create()
     {
