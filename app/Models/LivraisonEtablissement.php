@@ -9,8 +9,12 @@ class LivraisonEtablissement extends Model
 {
     use HasFactory;
 
-        protected $fillable = ['etablissement_id', 'semaine', 'date_livraison'];
-
+        protected $fillable = [
+            'etablissement_id',
+            'semaine',
+            'date_livraison',
+            'statut',
+        ];
     public function etablissement()
     {
         return $this->belongsTo(Etablissement::class);

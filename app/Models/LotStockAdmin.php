@@ -22,4 +22,9 @@ class LotStockAdmin extends Model
     {
         return $this->hasMany(DetailLivraisonEtablissement::class, 'lot_stock_admin_id');
     }
+
+        public function isExpired()
+    {
+        return $this->date_expiration < now()->toDateString();
+    }
 }

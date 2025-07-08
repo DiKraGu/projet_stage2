@@ -16,6 +16,8 @@ return new class extends Migration
             $table->foreignId('etablissement_id')->constrained()->onDelete('cascade');
             $table->string('semaine'); // format: "2025-W27" par ex.
             $table->date('date_livraison');
+            $table->enum('statut', ['en_attente', 'livrée', 'annulée'])->default('en_attente');
+
             $table->timestamps();
         });
     }

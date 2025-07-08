@@ -42,6 +42,7 @@ use App\Http\Controllers\Admin\StockController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\CategorieController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\LotStockAdminController;
 use App\Http\Controllers\Admin\VilleController;
 use App\Http\Controllers\Admin\ProvinceController;
 
@@ -62,9 +63,10 @@ Route::middleware(['auth.admin'])->prefix('admin')->name('admin.')->group(functi
     Route::resource('provinces', ProvinceController::class);
     Route::resource('etablissements', EtablissementController::class);
     Route::resource('fournisseurs', FournisseurController::class);
-        Route::resource('categories', CategorieController::class);
+    Route::resource('categories', CategorieController::class);
     Route::resource('produits', ProduitController::class);
-    Route::resource('stocks', StockController::class);
+    Route::resource('stocks', LotStockAdminController::class);
+    // Route::resource('stocks', StockController::class);
     Route::resource('livraisons', LivraisonController::class);
     Route::resource('menus', MenuController::class);
 

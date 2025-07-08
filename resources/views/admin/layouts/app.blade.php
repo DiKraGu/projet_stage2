@@ -118,6 +118,11 @@
                             <span class="nav-text">Produits</span>
                         </a>
                     </li>
+                    <li class="nav-item px-3">
+                        <a href="{{ route('admin.stocks.index') }}" class="nav-link">
+                            <span class="nav-text">Lots stocks</span>
+                        </a>
+                    </li>
                 </ul>
             </div>
 
