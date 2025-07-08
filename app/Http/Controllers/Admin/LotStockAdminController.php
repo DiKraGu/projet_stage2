@@ -5,13 +5,14 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\LotStockAdmin;
 use App\Models\Produit;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator as PaginationLengthAwarePaginator;
 use Illuminate\Http\Request;
 
 class LotStockAdminController extends Controller
 {
 
 
-//     public function index(Request $request)
+// public function index(Request $request)
 // {
 //     $query = LotStockAdmin::with('produit')->orderBy('date_reception', 'desc');
 
@@ -37,14 +38,21 @@ class LotStockAdminController extends Controller
 //         });
 //     }
 
-//     $lots = $query->get();
+//     $lots = $query->get()
+//         ->sortBy(function ($lot) {
+//             if ($lot->isExpired()) return 0;          // périmé en premier
+//             if ($lot->quantite_disponible == 0) return 1; // épuisé ensuite
+//             return 2;                                // actif en dernier
+//         })
+//         ->values();
 
 //     return view('admin.stocks.index', compact('lots'));
 // }
 
+
 public function index(Request $request)
 {
-    $query = LotStockAdmin::with('produit')->orderBy('date_reception', 'desc');
+    $query = LotStockAdmin::with('produit');
 
     // Filtrage par nom de produit
     if ($request->filled('search')) {
@@ -68,16 +76,40 @@ public function index(Request $request)
         });
     }
 
-    $lots = $query->get()
-        ->sortBy(function ($lot) {
-            if ($lot->isExpired()) return 0;          // périmé en premier
-            if ($lot->quantite_disponible == 0) return 1; // épuisé ensuite
-            return 2;                                // actif en dernier
-        })
-        ->values();
+    // ✅ Filtrage par date de réception
+    if ($request->filled('date_reception')) {
+        $query->whereDate('date_reception', $request->date_reception);
+    }
+
+    // ✅ Filtrage par date d'expiration
+    if ($request->filled('date_expiration')) {
+        $query->whereDate('date_expiration', $request->date_expiration);
+    }
+
+    // Récupération des lots
+    $lotsNonPagines = $query->get();
+
+    // Tri personnalisé (périmé -> épuisé -> actif)
+    $lotsTries = $lotsNonPagines->sortBy(function ($lot) {
+        if ($lot->isExpired()) return 0;
+        if ($lot->quantite_disponible == 0) return 1;
+        return 2;
+    })->values();
+
+    // Pagination manuelle
+    $page = $request->get('page', 1);
+    $perPage = 10;
+    $lots = new \Illuminate\Pagination\LengthAwarePaginator(
+        $lotsTries->forPage($page, $perPage),
+        $lotsTries->count(),
+        $perPage,
+        $page,
+        ['path' => $request->url(), 'query' => $request->query()]
+    );
 
     return view('admin.stocks.index', compact('lots'));
 }
+
 
 
 

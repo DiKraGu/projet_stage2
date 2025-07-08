@@ -13,24 +13,35 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    <form method="GET" action="{{ route('admin.stocks.index') }}" class="mb-3 d-flex gap-2 align-items-center flex-wrap">
+<form method="GET" action="{{ route('admin.stocks.index') }}" class="mb-3 d-flex gap-2 align-items-center flex-nowrap">
 
-    {{-- Barre de recherche par nom de produit --}}
-    <input type="text" name="search" class="form-control w-25" placeholder="Rechercher un produit..."
-           value="{{ request('search') }}">
-    <button type="submit" class="btn btn-outline-primary">Rechercher</button>
+    {{-- Recherche --}}
+    <input type="text" name="search" value="{{ request('search') }}" class="form-control w-20" placeholder="Rechercher un produit...">
+    <button type="submit" class="btn btn-outline-primary ms-2">Rechercher</button>
 
-
-    {{-- Sélecteur de filtre par état --}}
-    <select name="etat" class="form-select w-25" onchange="this.form.submit()">
+    {{-- Filtrage par état --}}
+    <select name="etat" class="form-select w-15" onchange="this.form.submit()">
         <option value="">-- Tous les états --</option>
         <option value="actif" {{ request('etat') == 'actif' ? 'selected' : '' }}>Actif</option>
         <option value="perime" {{ request('etat') == 'perime' ? 'selected' : '' }}>Périmé</option>
         <option value="epuise" {{ request('etat') == 'epuise' ? 'selected' : '' }}>Épuisé</option>
     </select>
 
-    {{-- Bouton de recherche --}}
+    {{-- Filtre par date de réception --}}
+    <input type="date" name="date_reception" value="{{ request('date_reception') }}" class="form-control w-20">
+
+
+    {{-- Filtre par date d'expiration --}}
+    <input  type="date"
+            name="date_expiration"
+            value="{{ request('date_expiration') }}"
+            class="form-control w-20">
+
+        <button type="submit" class="btn btn-outline-primary ms-2">Filtrer</button>
+
 </form>
+
+
 
 
     <table class="table table-bordered">
@@ -83,5 +94,9 @@
             @endforeach
         </tbody>
     </table>
+
+        <div class="d-flex justify-content-end mt-4">
+            {{ $lots->withQueryString()->links() }}
+        </div>
 @endsection
 
