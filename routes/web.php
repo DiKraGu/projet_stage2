@@ -69,6 +69,8 @@ Route::middleware(['auth.admin'])->prefix('admin')->name('admin.')->group(functi
     // Route::resource('stocks', StockController::class);
     Route::resource('livraisons', LivraisonController::class);
     Route::resource('menus', MenuController::class);
+    Route::get('alerts', [LotStockAdminController::class, 'alerts'])->name('alerts');
+
 
 });
 

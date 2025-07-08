@@ -7,47 +7,11 @@ use App\Models\LotStockAdmin;
 use App\Models\Produit;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator as PaginationLengthAwarePaginator;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 class LotStockAdminController extends Controller
 {
-
-
-// public function index(Request $request)
-// {
-//     $query = LotStockAdmin::with('produit')->orderBy('date_reception', 'desc');
-
-//     // Filtrage par nom de produit
-//     if ($request->filled('search')) {
-//         $query->whereHas('produit', function ($q) use ($request) {
-//             $q->where('nom', 'like', '%' . $request->search . '%');
-//         });
-//     }
-
-//     // Filtrage par état
-//     if ($request->filled('etat')) {
-//         $etat = $request->etat;
-//         $query->where(function ($q) use ($etat) {
-//             if ($etat === 'actif') {
-//                 $q->where('quantite_disponible', '>', 0)
-//                   ->where('date_expiration', '>=', now()->toDateString());
-//             } elseif ($etat === 'perime') {
-//                 $q->where('date_expiration', '<', now()->toDateString());
-//             } elseif ($etat === 'epuise') {
-//                 $q->where('quantite_disponible', '=', 0);
-//             }
-//         });
-//     }
-
-//     $lots = $query->get()
-//         ->sortBy(function ($lot) {
-//             if ($lot->isExpired()) return 0;          // périmé en premier
-//             if ($lot->quantite_disponible == 0) return 1; // épuisé ensuite
-//             return 2;                                // actif en dernier
-//         })
-//         ->values();
-
-//     return view('admin.stocks.index', compact('lots'));
-// }
 
 
 public function index(Request $request)
@@ -181,4 +145,85 @@ public function index(Request $request)
         $stock->delete();
         return redirect()->route('admin.stocks.index')->with('success', 'Lot supprimé.');
     }
+
+public function alerts(Request $request)
+{
+    $now = now();
+    $soon = $now->copy()->addDays(7);
+
+    $lots = LotStockAdmin::with('produit')->get();
+
+    $alerts = collect();
+
+    // Stock faible < 5 mais > 0
+    $lowStock = $lots->filter(fn($lot) => $lot->quantite_disponible < 5 && $lot->quantite_disponible > 0);
+    foreach ($lowStock as $lot) {
+        $alerts->push([
+            'lot' => $lot,
+            'type' => 'stock_faible',
+            'message' => 'Stock faible',
+        ]);
+    }
+
+    // Bientôt périmé (date_expiration dans 7 jours)
+    $almostExpired = $lots->filter(fn($lot) => $lot->date_expiration >= $now && $lot->date_expiration <= $soon);
+    foreach ($almostExpired as $lot) {
+        $alerts->push([
+            'lot' => $lot,
+            'type' => 'bientot_perime',
+            'message' => 'Bientôt périmé',
+        ]);
+    }
+
+    // Périmé
+    $expired = $lots->filter(fn($lot) => $lot->date_expiration < $now);
+    foreach ($expired as $lot) {
+        $alerts->push([
+            'lot' => $lot,
+            'type' => 'perime',
+            'message' => 'Périmé',
+        ]);
+    }
+
+    // Épuisé (quantité_disponible = 0)
+    $outOfStock = $lots->filter(fn($lot) => $lot->quantite_disponible == 0);
+    foreach ($outOfStock as $lot) {
+        $alerts->push([
+            'lot' => $lot,
+            'type' => 'epuise',
+            'message' => 'Épuisé',
+        ]);
+    }
+
+    // Filtrage par type d'alerte si demandé
+    if ($request->filled('type')) {
+        $alerts = $alerts->filter(fn($alert) => $alert['type'] === $request->type);
+    }
+
+    // Trier par type puis date_expiration
+    $alerts = $alerts->sortBy([
+        ['type', 'asc'],
+        ['lot.date_expiration', 'asc'],
+    ])->values();
+
+    // Pagination manuelle
+    $perPage = 10;
+    $page = $request->get('page', 1);
+    $total = $alerts->count();
+
+    // Slice la collection pour la page courante
+    $alertsForPage = $alerts->slice(($page - 1) * $perPage, $perPage)->values();
+
+    // Créer le paginator
+    $paginatedAlerts = new LengthAwarePaginator(
+        $alertsForPage,
+        $total,
+        $perPage,
+        $page,
+        ['path' => $request->url(), 'query' => $request->query()]
+    );
+
+    return view('admin.alerts.index', ['alerts' => $paginatedAlerts]);
+}
+
 }

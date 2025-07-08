@@ -78,6 +78,10 @@
         <div id="sidebar" class="sidebar">
             <div>
                 <ul class="nav flex-column">
+                <a href="{{ route('admin.alerts') }}" class="btn btn-outline-danger">
+                    🔔 Alertes
+                </a>
+
                     <li class="nav-item px-3">
                         <a href="{{ route('admin.dashboard') }}" class="nav-link">
                             <span class="nav-text">Dashboard</span>
