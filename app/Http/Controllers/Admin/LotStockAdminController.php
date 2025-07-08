@@ -9,11 +9,77 @@ use Illuminate\Http\Request;
 
 class LotStockAdminController extends Controller
 {
-    public function index()
-    {
-        $lots = LotStockAdmin::with('produit')->orderBy('date_reception', 'desc')->get();
-        return view('admin.stocks.index', compact('lots'));
+
+
+//     public function index(Request $request)
+// {
+//     $query = LotStockAdmin::with('produit')->orderBy('date_reception', 'desc');
+
+//     // Filtrage par nom de produit
+//     if ($request->filled('search')) {
+//         $query->whereHas('produit', function ($q) use ($request) {
+//             $q->where('nom', 'like', '%' . $request->search . '%');
+//         });
+//     }
+
+//     // Filtrage par état
+//     if ($request->filled('etat')) {
+//         $etat = $request->etat;
+//         $query->where(function ($q) use ($etat) {
+//             if ($etat === 'actif') {
+//                 $q->where('quantite_disponible', '>', 0)
+//                   ->where('date_expiration', '>=', now()->toDateString());
+//             } elseif ($etat === 'perime') {
+//                 $q->where('date_expiration', '<', now()->toDateString());
+//             } elseif ($etat === 'epuise') {
+//                 $q->where('quantite_disponible', '=', 0);
+//             }
+//         });
+//     }
+
+//     $lots = $query->get();
+
+//     return view('admin.stocks.index', compact('lots'));
+// }
+
+public function index(Request $request)
+{
+    $query = LotStockAdmin::with('produit')->orderBy('date_reception', 'desc');
+
+    // Filtrage par nom de produit
+    if ($request->filled('search')) {
+        $query->whereHas('produit', function ($q) use ($request) {
+            $q->where('nom', 'like', '%' . $request->search . '%');
+        });
     }
+
+    // Filtrage par état
+    if ($request->filled('etat')) {
+        $etat = $request->etat;
+        $query->where(function ($q) use ($etat) {
+            if ($etat === 'actif') {
+                $q->where('quantite_disponible', '>', 0)
+                  ->where('date_expiration', '>=', now()->toDateString());
+            } elseif ($etat === 'perime') {
+                $q->where('date_expiration', '<', now()->toDateString());
+            } elseif ($etat === 'epuise') {
+                $q->where('quantite_disponible', '=', 0);
+            }
+        });
+    }
+
+    $lots = $query->get()
+        ->sortBy(function ($lot) {
+            if ($lot->isExpired()) return 0;          // périmé en premier
+            if ($lot->quantite_disponible == 0) return 1; // épuisé ensuite
+            return 2;                                // actif en dernier
+        })
+        ->values();
+
+    return view('admin.stocks.index', compact('lots'));
+}
+
+
 
     public function create()
     {
