@@ -25,6 +25,8 @@ class DatabaseSeeder extends Seeder
             FournisseurSeeder::class,
             CategorieSeeder::class,
             ProduitSeeder::class,
+            LotStockAdminSeeder::class,
+
 
 
             // RegionSeeder::class,
