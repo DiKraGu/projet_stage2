@@ -71,8 +71,9 @@
                     <td>{{ $lot->quantite_recue }}</td>
                     <td>{{ $lot->quantite_disponible }}</td>
                     <td>{{ number_format($lot->prix_unitaire, 2) }} DH</td>
-                    <td>{{ $lot->date_reception }}</td>
-                    <td>{{ $lot->date_expiration }}</td>
+                    <td>{{ $lot->date_reception->format('Y-m-d') }}</td>
+                    <td>{{ $lot->date_expiration->format('Y-m-d') }}</td>
+
                     <td>
                         @if ($lot->quantite_disponible == 0)
                             ⚠️ Épuisé

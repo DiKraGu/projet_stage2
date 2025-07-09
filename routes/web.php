@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AlerteController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -69,7 +70,13 @@ Route::middleware(['auth.admin'])->prefix('admin')->name('admin.')->group(functi
     // Route::resource('stocks', StockController::class);
     Route::resource('livraisons', LivraisonController::class);
     Route::resource('menus', MenuController::class);
-    Route::get('alerts', [LotStockAdminController::class, 'alerts'])->name('alerts');
+    // Route::get('alerts', [LotStockAdminController::class, 'alerts'])->name('alerts');
+
+    Route::get('alertes', [AlerteController::class, 'index'])->name('alerts');
+    Route::post('alertes/mass-action', [AlerteController::class, 'massAction'])->name('alerts.bulk');
+    Route::post('alertes/{id}/ignore', [AlerteController::class, 'ignore'])->name('alerts.ignore');
+    Route::delete('alertes/{id}', [AlerteController::class, 'destroy'])->name('alerts.destroy');
+
 
 
 });

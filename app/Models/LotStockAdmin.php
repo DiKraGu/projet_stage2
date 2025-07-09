@@ -13,6 +13,10 @@ class LotStockAdmin extends Model
         'produit_id', 'quantite_recue', 'prix_unitaire', 'date_expiration', 'quantite_disponible', 'date_reception'
     ];
 
+    protected $casts = [
+    'date_expiration' => 'datetime',
+    'date_reception' => 'datetime',
+];
     public function produit()
     {
         return $this->belongsTo(Produit::class);
