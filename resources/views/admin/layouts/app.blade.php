@@ -64,6 +64,11 @@
             padding: 6px 10px;
             border-radius: 5px;
         }
+        .sidebar.collapsed .alert-btn,
+        .sidebar.collapsed .logout-btn {
+            display: none;
+        }
+
     </style>
 </head>
 <body>
@@ -78,9 +83,17 @@
         <div id="sidebar" class="sidebar">
             <div>
                 <ul class="nav flex-column">
-                <a href="{{ route('admin.alerts') }}" class="btn btn-outline-danger">
-                    🔔 Alertes
-                </a>
+{{--
+                    <a href="{{ route('admin.alerts') }}" class="btn btn-outline-danger w-100">
+                        🔔 Alertes
+                    </a> --}}
+
+                    <div class="alert-btn px-3">
+                        <a href="{{ route('admin.alerts') }}" class="btn btn-outline-danger w-100">
+                            🔔 Alertes
+                        </a>
+                    </div>
+
 
                     <li class="nav-item px-3">
                         <a href="{{ route('admin.dashboard') }}" class="nav-link">
@@ -130,7 +143,7 @@
                 </ul>
             </div>
 
-            <div class="px-3 pb-4">
+            <div class="logout-btn px-3 pb-4">
                 @auth('admin')
                 <form method="POST" action="{{ route('admin.logout') }}">
                     @csrf
