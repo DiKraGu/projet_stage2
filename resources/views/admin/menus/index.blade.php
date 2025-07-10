@@ -48,9 +48,12 @@
 @section('title', 'Liste des menus de la semaine')
 
 @section('content')
-    <h1 class="mb-4">Menus</h1>
-    <a href="{{ route('admin.menus.create') }}" class="btn btn-primary mb-3">Créer un menu de la semaine</a>
 
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="mb-4">Menus</h1>
+        <a href="{{ route('admin.menus.create') }}" class="btn btn-primary ">Créer un menu de la semaine</a>
+    </div>
+    
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif

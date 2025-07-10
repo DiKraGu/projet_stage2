@@ -12,16 +12,14 @@
         <label class="form-label">Établissement</label>
         <select name="etablissement_id" class="form-select" required>
             @foreach($etablissements as $e)
-                <option value="{{ $e->id }}">{{ $e->nom }}</option>
+                <option value="{{ $e->id }}" {{ old('etablissement_id') == $e->id ? 'selected' : '' }}>
+                    {{ $e->nom }}
+                </option>
             @endforeach
         </select>
     </div>
 
     <div class="row">
-        {{-- <div class="col-md-6 mb-3">
-            <label class="form-label">Date de début de semaine</label>
-            <input type="date" name="semaine" class="form-control" required>
-        </div> --}}
         <div class="col-md-6 mb-3">
             <label class="form-label">Date de début de semaine</label>
             <input type="date" name="semaine" class="form-control @error('semaine') is-invalid @enderror" value="{{ old('semaine') }}" required>
@@ -30,21 +28,16 @@
             @enderror
         </div>
 
-        {{-- <div class="col-md-6 mb-3">
-            <label class="form-label">Date de fin de semaine</label>
-            <input type="date" name="semaine_fin" class="form-control" required>
-        </div> --}}
-
         <div class="col-md-6 mb-3">
-    <label class="form-label">Date de fin de semaine</label>
-    <input type="date" name="semaine_fin"
-           class="form-control @error('semaine_fin') is-invalid @enderror"
-           value="{{ old('semaine_fin') }}"
-           required>
-    {{-- @error('semaine_fin')
-        <div class="invalid-feedback">{{ $message }}</div>
-    @enderror --}}
-</div>
+            <label class="form-label">Date de fin de semaine</label>
+            <input type="date" name="semaine_fin"
+                   class="form-control @error('semaine_fin') is-invalid @enderror"
+                   value="{{ old('semaine_fin') }}"
+                   required>
+            @error('semaine_fin')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
     </div>
 
     @foreach(['lundi','mardi','mercredi','jeudi','vendredi','samedi','dimanche'] as $jour)
@@ -72,8 +65,12 @@
                 <div class="row produits-zone" id="zone-{{ $jour }}-{{ $type }}">
                     @foreach($categories as $cat)
                         @foreach($produits->where('categorie_id', $cat->id) as $p)
+                            @php
+                                $isChecked = old("menus.$jour.$type.$p->id") == 1;
+                                $quantite = old("quantites.$jour.$type.$p->id");
+                            @endphp
                             <div class="col-md-4 produit-item"
-                                 style="display: none;"
+                                 style="{{ $isChecked ? 'display: block;' : 'display: none;' }}"
                                  data-categorie="{{ $cat->id }}"
                                  data-nom="{{ strtolower($p->nom) }}"
                                  data-section="{{ $jour }}-{{ $type }}">
@@ -81,7 +78,8 @@
                                     <input class="form-check-input produit-checkbox" type="checkbox"
                                            id="check_{{ $jour }}_{{ $type }}_{{ $p->id }}"
                                            name="menus[{{ $jour }}][{{ $type }}][{{ $p->id }}]" value="1"
-                                           data-quantite-id="quant_{{ $jour }}_{{ $type }}_{{ $p->id }}">
+                                           data-quantite-id="quant_{{ $jour }}_{{ $type }}_{{ $p->id }}"
+                                           {{ $isChecked ? 'checked' : '' }}>
                                     <label class="form-check-label" for="check_{{ $jour }}_{{ $type }}_{{ $p->id }}">
                                         {{ $p->nom }} ({{ $cat->nom }})
                                     </label>
@@ -90,7 +88,8 @@
                                            name="quantites[{{ $jour }}][{{ $type }}][{{ $p->id }}]"
                                            class="form-control form-control-sm mt-1"
                                            placeholder="Quantité"
-                                           disabled>
+                                           value="{{ $quantite }}"
+                                           {{ $isChecked ? '' : 'disabled' }}>
                                 </div>
                             </div>
                         @endforeach
@@ -120,8 +119,10 @@
             const matchNom = nom.includes(search);
             const matchCat = !categorie || cat === categorie;
 
-            // Afficher si un des deux filtres est utilisé et correspond
             if ((search || categorie) && matchNom && matchCat) {
+                item.style.display = 'block';
+            } else if (!search && !categorie && item.querySelector('input[type="checkbox"]').checked) {
+                // afficher les produits déjà cochés même sans filtre
                 item.style.display = 'block';
             } else {
                 item.style.display = 'none';
@@ -136,11 +137,13 @@
         });
     });
 
-    // Activer le champ quantité uniquement si case cochée
+    // Activer/désactiver champ quantité selon la checkbox
     document.querySelectorAll('.produit-checkbox').forEach(checkbox => {
+        const inputId = checkbox.dataset.quantiteId;
+        const quantInput = document.getElementById(inputId);
+        quantInput.disabled = !checkbox.checked;
+
         checkbox.addEventListener('change', function () {
-            const inputId = this.dataset.quantiteId;
-            const quantInput = document.getElementById(inputId);
             quantInput.disabled = !this.checked;
             if (!this.checked) quantInput.value = '';
         });
