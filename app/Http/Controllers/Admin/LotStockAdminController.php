@@ -114,7 +114,9 @@ public function index(Request $request)
     $query->orderByDesc('date_reception');
 
     // 📦 Pagination
-    $lots = $query->paginate(10)->withQueryString();
+    // $lots = $query->paginate(10)->withQueryString();
+        $lots = $query->paginate(10);
+
 
     return view('admin.stocks.index', compact('lots'));
 }

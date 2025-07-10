@@ -25,4 +25,16 @@ class Produit extends Model
         return $this->hasMany(LotStockAdmin::class);
     }
 
+    public function menus()
+    {
+        return $this->belongsToMany(Menu::class, 'menu_produit')
+                    ->withPivot('quantite_utilisee')
+                    ->withTimestamps();
+    }
+
+        public function livraisons()
+    {
+        return $this->hasMany(DetailLivraisonEtablissement::class);
+    }
+
 }

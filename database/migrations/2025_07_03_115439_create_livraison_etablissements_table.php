@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('livraisons_etablissement', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('etablissement_id')->constrained()->onDelete('cascade');
-            $table->string('semaine'); // format: "2025-W27" par ex.
-            $table->date('date_livraison');
-            $table->enum('statut', ['en_attente', 'livrée', 'annulée'])->default('en_attente');
-
+            $table->unsignedBigInteger('etablissement_id');
+            $table->date('semaine'); // Date du lundi de la semaine concernée
+            $table->date('date_livraison')->nullable();
             $table->timestamps();
+
+            $table->foreign('etablissement_id')->references('id')->on('etablissements')->onDelete('cascade');
+            $table->unique(['etablissement_id', 'semaine'], 'unique_livraison_par_semaine');
         });
     }
 

@@ -9,19 +9,21 @@ class LivraisonEtablissement extends Model
 {
     use HasFactory;
 
-        protected $fillable = [
-            'etablissement_id',
-            'semaine',
-            'date_livraison',
-            'statut',
-        ];
+    protected $table = 'livraisons_etablissement';
+
+    protected $fillable = [
+        'etablissement_id',
+        'semaine',
+        'date_livraison',
+    ];
+
     public function etablissement()
     {
         return $this->belongsTo(Etablissement::class);
     }
 
-    public function detailsLivraison()
+    public function details()
     {
-        return $this->hasMany(DetailLivraisonEtablissement::class);
+        return $this->hasMany(DetailLivraisonEtablissement::class, 'livraison_etablissement_id');
     }
 }

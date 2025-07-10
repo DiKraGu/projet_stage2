@@ -5,6 +5,7 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 use App\Models\Categorie;
+use App\Models\Etablissement;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -22,10 +23,12 @@ class DatabaseSeeder extends Seeder
         // ]);
         $this->call([
             AdminSeeder::class,
+            // EtablissementSeeder::class,
             FournisseurSeeder::class,
             CategorieSeeder::class,
             ProduitSeeder::class,
             LotStockAdminSeeder::class,
+
 
 
 

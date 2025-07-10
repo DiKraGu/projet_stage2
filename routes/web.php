@@ -70,6 +70,7 @@ Route::middleware(['auth.admin'])->prefix('admin')->name('admin.')->group(functi
     // Route::resource('stocks', StockController::class);
     Route::resource('livraisons', LivraisonController::class);
     Route::resource('menus', MenuController::class);
+    Route::get('menus/{menu}/pdf', [MenuController::class, 'pdf'])->name('menus.pdf');
     // Route::get('alerts', [LotStockAdminController::class, 'alerts'])->name('alerts');
 
     Route::get('alertes', [AlerteController::class, 'index'])->name('alerts');

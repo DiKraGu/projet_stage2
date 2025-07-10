@@ -19,8 +19,9 @@ return new class extends Migration
                 ->references('id')
                 ->on('livraisons_etablissement')
                 ->onDelete('cascade');
+
             $table->foreignId('produit_id')->constrained()->onDelete('cascade');
-            $table->foreignId('lot_stock_admin_id')->constrained('lot_stock_admins')->onDelete('cascade');
+            $table->foreignId('lot_stock_admin_id')->nullable()->constrained('lot_stock_admins')->onDelete('cascade');
             $table->integer('quantite_livree');
             $table->timestamps();
         });

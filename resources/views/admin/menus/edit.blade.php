@@ -1,0 +1,276 @@
+{{--
+
+@extends('admin.layouts.app')
+
+@section('title', 'Modifier le menu de la semaine')
+
+@section('content')
+<h1 class="mb-4">Modifier le menu de la semaine</h1>
+
+<form method="POST" action="{{ route('admin.menus.update', $menu) }}">
+    @csrf
+    @method('PUT')
+
+    <div class="mb-3">
+        <label for="etablissement_id" class="form-label">Etablissement</label>
+        <select name="etablissement_id" id="etablissement_id" class="form-select" required>
+            @foreach($etablissements as $etablissement)
+                <option value="{{ $etablissement->id }}" {{ $menu->etablissement_id == $etablissement->id ? 'selected' : '' }}>
+                    {{ $etablissement->nom }}
+                </option>
+            @endforeach
+        </select>
+    </div>
+
+    <div class="mb-4">
+        <label for="semaine" class="form-label">Semaine (date)</label>
+        <input type="date" name="semaine" id="semaine" class="form-control" value="{{ $menu->semaine }}" required>
+    </div>
+
+    @php
+        $jours = ['lundi','mardi','mercredi','jeudi','vendredi','samedi','dimanche'];
+        $typesRepas = ['petit_dejeuner' => 'Petit Déjeuner', 'dejeuner' => 'Déjeuner', 'diner' => 'Dîner'];
+    @endphp
+
+    <div class="mb-4">
+        <label class="form-label">Produits</label>
+
+        <div class="mb-2 d-flex gap-2">
+            <select id="filter_categorie" class="form-select w-25">
+                <option value="">Toutes catégories</option>
+                @foreach($categories as $cat)
+                    <option value="{{ $cat->id }}">{{ $cat->nom }}</option>
+                @endforeach
+            </select>
+            <input type="text" id="search_produit" class="form-control w-50" placeholder="Rechercher un produit">
+        </div>
+
+        <div class="border p-2" style="max-height: 400px; overflow-y: auto;">
+            @foreach($jours as $jour)
+                <h5 class="mt-3 text-primary text-capitalize">{{ $jour }}</h5>
+
+                @foreach($typesRepas as $typeKey => $typeLabel)
+                    <h6 class="mt-2">{{ $typeLabel }}</h6>
+
+                    @foreach($produits as $produit)
+                        @php
+                            $quantite = 0;
+                            if(isset($pivot[$jour]) && isset($pivot[$jour][$typeKey])) {
+                                $prod = $pivot[$jour][$typeKey]->firstWhere('id', $produit->id);
+                                $quantite = $prod ? $prod->pivot->quantite_utilisee : 0;
+                            }
+                        @endphp
+
+                        <div class="form-check produit-item" data-categorie="{{ $produit->categorie_id }}" data-nom="{{ strtolower($produit->nom) }}">
+                            <input class="form-check-input" type="checkbox"
+                                name="menus[{{ $jour }}][{{ $typeKey }}][{{ $produit->id }}]"
+                                id="produit_{{ $jour }}_{{ $typeKey }}_{{ $produit->id }}"
+                                value="{{ $quantite }}"
+                                {{ $quantite > 0 ? 'checked' : '' }}>
+                            <label class="form-check-label" for="produit_{{ $jour }}_{{ $typeKey }}_{{ $produit->id }}">
+                                {{ $produit->nom }}
+                            </label>
+                            <input type="number" min="0" class="form-control d-inline-block w-25 ms-2"
+                                name="menus_quantite[{{ $jour }}][{{ $typeKey }}][{{ $produit->id }}]"
+                                value="{{ $quantite > 0 ? $quantite : '' }}"
+                                placeholder="Qté" {{ $quantite > 0 ? '' : 'disabled' }}>
+                        </div>
+                    @endforeach
+                @endforeach
+            @endforeach
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-success">Mettre à jour le menu</button>
+</form>
+
+<script>
+    const filterCategorie = document.getElementById('filter_categorie');
+    const searchInput = document.getElementById('search_produit');
+
+    filterCategorie.addEventListener('change', filterProduits);
+    searchInput.addEventListener('input', filterProduits);
+
+    function filterProduits() {
+        const selectedCategorie = filterCategorie.value;
+        const keyword = searchInput.value.toLowerCase();
+
+        document.querySelectorAll('.produit-item').forEach(item => {
+            const categorie = item.dataset.categorie;
+            const nom = item.dataset.nom;
+
+            const matchCategorie = !selectedCategorie || categorie === selectedCategorie;
+            const matchNom = nom.includes(keyword);
+
+            item.style.display = (matchCategorie && matchNom) ? 'block' : 'none';
+        });
+    }
+
+    // Enable/disable quantity input based on checkbox
+    document.querySelectorAll('.produit-item input[type=checkbox]').forEach(checkbox => {
+        checkbox.addEventListener('change', e => {
+            const qtyInput = e.target.parentElement.querySelector('input[type=number]');
+            if (e.target.checked) {
+                qtyInput.disabled = false;
+                if (!qtyInput.value) qtyInput.value = 1;
+            } else {
+                qtyInput.disabled = true;
+                qtyInput.value = '';
+            }
+        });
+    });
+</script>
+
+@endsection --}}
+
+@extends('admin.layouts.app')
+
+@section('title', 'Modifier le menu de la semaine')
+
+@section('content')
+<h1 class="mb-4">Modifier le menu de la semaine</h1>
+
+<form method="POST" action="{{ route('admin.menus.update', $menu) }}">
+    @csrf
+    @method('PUT')
+{{--
+    <div class="mb-3">
+        <label class="form-label">Établissement</label>
+        <select name="etablissement_id" class="form-select" required disabled>
+            <option value="{{ $menu->etablissement->id }}">{{ $menu->etablissement->nom }}</option>
+        </select>
+    </div> --}}
+
+<div class="mb-3">
+    <label class="form-label">Établissement</label>
+    <select class="form-select" disabled>
+        <option>{{ $menu->etablissement->nom }}</option>
+    </select>
+    <input type="hidden" name="etablissement_id" value="{{ $menu->etablissement->id }}">
+</div>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Date de début de semaine</label>
+            <input type="date" name="semaine" class="form-control" value="{{ $menu->semaine }}" required>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Date de fin de semaine</label>
+            <input type="date" name="semaine_fin" class="form-control" value="{{ $menu->semaine_fin }}" required>
+        </div>
+    </div>
+
+    @foreach(['lundi','mardi','mercredi','jeudi','vendredi','samedi','dimanche'] as $jour)
+        <h4 class="mt-4 text-primary">{{ ucfirst($jour) }}</h4>
+
+        @foreach(['Petit Déjeuner'=>'petit_dejeuner','Déjeuner'=>'dejeuner','Dîner'=>'diner'] as $label => $type)
+            <div class="mb-4 border p-3 rounded">
+                <h5 class="text-secondary">{{ $label }}</h5>
+
+                <div class="row mb-2">
+                    <div class="col-md-4">
+                        <select class="form-select filter-categorie" data-target="{{ $jour }}-{{ $type }}">
+                            <option value="">Toutes les catégories</option>
+                            @foreach($categories as $cat)
+                                <option value="{{ $cat->id }}">{{ $cat->nom }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control filter-search" placeholder="Rechercher un produit..."
+                               data-target="{{ $jour }}-{{ $type }}">
+                    </div>
+                </div>
+
+                <div class="row produits-zone" id="zone-{{ $jour }}-{{ $type }}">
+                    @foreach($categories as $cat)
+                        @foreach($produits->where('categorie_id', $cat->id) as $p)
+                            @php
+                                $checked = isset($selected[$jour][$type][$p->id]);
+                                $quantite = $checked ? $selected[$jour][$type][$p->id]['quantite'] : '';
+                            @endphp
+                            <div class="col-md-4 produit-item"
+                                 style="display: none;"
+                                 data-categorie="{{ $cat->id }}"
+                                 data-nom="{{ strtolower($p->nom) }}"
+                                 data-section="{{ $jour }}-{{ $type }}">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input produit-checkbox" type="checkbox"
+                                           id="check_{{ $jour }}_{{ $type }}_{{ $p->id }}"
+                                           name="menus[{{ $jour }}][{{ $type }}][{{ $p->id }}]" value="1"
+                                           data-quantite-id="quant_{{ $jour }}_{{ $type }}_{{ $p->id }}"
+                                           {{ $checked ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="check_{{ $jour }}_{{ $type }}_{{ $p->id }}">
+                                        {{ $p->nom }} ({{ $cat->nom }})
+                                    </label>
+                                    <input type="number"
+                                           id="quant_{{ $jour }}_{{ $type }}_{{ $p->id }}"
+                                           name="quantites[{{ $jour }}][{{ $type }}][{{ $p->id }}]"
+                                           class="form-control form-control-sm mt-1"
+                                           placeholder="Quantité"
+                                           value="{{ $quantite }}"
+                                           {{ $checked ? '' : 'disabled' }}>
+                                </div>
+                            </div>
+                        @endforeach
+                    @endforeach
+                </div>
+            </div>
+        @endforeach
+    @endforeach
+
+    <button type="submit" class="btn btn-primary mt-4">Mettre à jour</button>
+</form>
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul class="mb-0">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
+
+{{-- Scripts --}}
+<script>
+    // Filtres
+    const filterInputs = document.querySelectorAll('.filter-search, .filter-categorie');
+
+    function filtrer(sectionId) {
+        const search = document.querySelector(`.filter-search[data-target="${sectionId}"]`).value.toLowerCase();
+        const categorie = document.querySelector(`.filter-categorie[data-target="${sectionId}"]`).value;
+
+        document.querySelectorAll(`.produit-item[data-section="${sectionId}"]`).forEach(item => {
+            const nom = item.dataset.nom;
+            const cat = item.dataset.categorie;
+            const matchNom = nom.includes(search);
+            const matchCat = !categorie || cat === categorie;
+
+            if ((search || categorie) && matchNom && matchCat) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+
+    filterInputs.forEach(input => {
+        input.addEventListener('input', () => {
+            const sectionId = input.dataset.target;
+            filtrer(sectionId);
+        });
+    });
+
+    // Quantité activée seulement si produit coché
+    document.querySelectorAll('.produit-checkbox').forEach(checkbox => {
+        const inputId = checkbox.dataset.quantiteId;
+        const quantInput = document.getElementById(inputId);
+        quantInput.disabled = !checkbox.checked;
+
+        checkbox.addEventListener('change', function () {
+            quantInput.disabled = !this.checked;
+            if (!this.checked) quantInput.value = '';
+        });
+    });
+</script>
+@endsection

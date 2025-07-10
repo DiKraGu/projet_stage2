@@ -13,9 +13,13 @@ return new class extends Migration
     {
         Schema::create('menus', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('etablissement_id')->constrained()->onDelete('cascade');
-            $table->date('date');
+            $table->unsignedBigInteger('etablissement_id');
+            $table->date('semaine'); // date du lundi de la semaine
+            $table->date('semaine_fin');
             $table->timestamps();
+
+            $table->foreign('etablissement_id')->references('id')->on('etablissements')->onDelete('cascade');
+            $table->unique(['etablissement_id', 'semaine'], 'unique_menu_par_semaine');
         });
     }
 

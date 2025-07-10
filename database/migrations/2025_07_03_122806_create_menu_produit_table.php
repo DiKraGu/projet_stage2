@@ -13,10 +13,15 @@ return new class extends Migration
     {
         Schema::create('menu_produit', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('menu_id')->constrained()->onDelete('cascade');
-            $table->foreignId('produit_id')->constrained()->onDelete('cascade');
+            $table->unsignedBigInteger('menu_id');
+            $table->unsignedBigInteger('produit_id');
+            $table->string('jour'); // lundi, mardi...
+            $table->string('type_repas'); // petit_dejeuner, dejeuner, diner
             $table->integer('quantite_utilisee');
             $table->timestamps();
+
+            $table->foreign('menu_id')->references('id')->on('menus')->onDelete('cascade');
+            $table->foreign('produit_id')->references('id')->on('produits')->onDelete('cascade');
         });
     }
 

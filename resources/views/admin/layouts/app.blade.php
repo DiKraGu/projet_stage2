@@ -140,6 +140,13 @@
                             <span class="nav-text">Lots stocks</span>
                         </a>
                     </li>
+
+                    <li class="nav-item px-3">
+                        <a href="{{ route('admin.menus.index') }}" class="nav-link">
+                            <span class="nav-text">Menus</span>
+                        </a>
+                    </li>
+
                 </ul>
             </div>
 
