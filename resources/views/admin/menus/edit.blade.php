@@ -1,5 +1,3 @@
-{{--
-
 @extends('admin.layouts.app')
 
 @section('title', 'Modifier le menu de la semaine')
@@ -11,143 +9,14 @@
     @csrf
     @method('PUT')
 
-    <div class="mb-3">
-        <label for="etablissement_id" class="form-label">Etablissement</label>
-        <select name="etablissement_id" id="etablissement_id" class="form-select" required>
-            @foreach($etablissements as $etablissement)
-                <option value="{{ $etablissement->id }}" {{ $menu->etablissement_id == $etablissement->id ? 'selected' : '' }}>
-                    {{ $etablissement->nom }}
-                </option>
-            @endforeach
-        </select>
-    </div>
-
-    <div class="mb-4">
-        <label for="semaine" class="form-label">Semaine (date)</label>
-        <input type="date" name="semaine" id="semaine" class="form-control" value="{{ $menu->semaine }}" required>
-    </div>
-
-    @php
-        $jours = ['lundi','mardi','mercredi','jeudi','vendredi','samedi','dimanche'];
-        $typesRepas = ['petit_dejeuner' => 'Petit Déjeuner', 'dejeuner' => 'Déjeuner', 'diner' => 'Dîner'];
-    @endphp
-
-    <div class="mb-4">
-        <label class="form-label">Produits</label>
-
-        <div class="mb-2 d-flex gap-2">
-            <select id="filter_categorie" class="form-select w-25">
-                <option value="">Toutes catégories</option>
-                @foreach($categories as $cat)
-                    <option value="{{ $cat->id }}">{{ $cat->nom }}</option>
-                @endforeach
-            </select>
-            <input type="text" id="search_produit" class="form-control w-50" placeholder="Rechercher un produit">
-        </div>
-
-        <div class="border p-2" style="max-height: 400px; overflow-y: auto;">
-            @foreach($jours as $jour)
-                <h5 class="mt-3 text-primary text-capitalize">{{ $jour }}</h5>
-
-                @foreach($typesRepas as $typeKey => $typeLabel)
-                    <h6 class="mt-2">{{ $typeLabel }}</h6>
-
-                    @foreach($produits as $produit)
-                        @php
-                            $quantite = 0;
-                            if(isset($pivot[$jour]) && isset($pivot[$jour][$typeKey])) {
-                                $prod = $pivot[$jour][$typeKey]->firstWhere('id', $produit->id);
-                                $quantite = $prod ? $prod->pivot->quantite_utilisee : 0;
-                            }
-                        @endphp
-
-                        <div class="form-check produit-item" data-categorie="{{ $produit->categorie_id }}" data-nom="{{ strtolower($produit->nom) }}">
-                            <input class="form-check-input" type="checkbox"
-                                name="menus[{{ $jour }}][{{ $typeKey }}][{{ $produit->id }}]"
-                                id="produit_{{ $jour }}_{{ $typeKey }}_{{ $produit->id }}"
-                                value="{{ $quantite }}"
-                                {{ $quantite > 0 ? 'checked' : '' }}>
-                            <label class="form-check-label" for="produit_{{ $jour }}_{{ $typeKey }}_{{ $produit->id }}">
-                                {{ $produit->nom }}
-                            </label>
-                            <input type="number" min="0" class="form-control d-inline-block w-25 ms-2"
-                                name="menus_quantite[{{ $jour }}][{{ $typeKey }}][{{ $produit->id }}]"
-                                value="{{ $quantite > 0 ? $quantite : '' }}"
-                                placeholder="Qté" {{ $quantite > 0 ? '' : 'disabled' }}>
-                        </div>
-                    @endforeach
-                @endforeach
-            @endforeach
-        </div>
-    </div>
-
-    <button type="submit" class="btn btn-success">Mettre à jour le menu</button>
-</form>
-
-<script>
-    const filterCategorie = document.getElementById('filter_categorie');
-    const searchInput = document.getElementById('search_produit');
-
-    filterCategorie.addEventListener('change', filterProduits);
-    searchInput.addEventListener('input', filterProduits);
-
-    function filterProduits() {
-        const selectedCategorie = filterCategorie.value;
-        const keyword = searchInput.value.toLowerCase();
-
-        document.querySelectorAll('.produit-item').forEach(item => {
-            const categorie = item.dataset.categorie;
-            const nom = item.dataset.nom;
-
-            const matchCategorie = !selectedCategorie || categorie === selectedCategorie;
-            const matchNom = nom.includes(keyword);
-
-            item.style.display = (matchCategorie && matchNom) ? 'block' : 'none';
-        });
-    }
-
-    // Enable/disable quantity input based on checkbox
-    document.querySelectorAll('.produit-item input[type=checkbox]').forEach(checkbox => {
-        checkbox.addEventListener('change', e => {
-            const qtyInput = e.target.parentElement.querySelector('input[type=number]');
-            if (e.target.checked) {
-                qtyInput.disabled = false;
-                if (!qtyInput.value) qtyInput.value = 1;
-            } else {
-                qtyInput.disabled = true;
-                qtyInput.value = '';
-            }
-        });
-    });
-</script>
-
-@endsection --}}
-
-@extends('admin.layouts.app')
-
-@section('title', 'Modifier le menu de la semaine')
-
-@section('content')
-<h1 class="mb-4">Modifier le menu de la semaine</h1>
-
-<form method="POST" action="{{ route('admin.menus.update', $menu) }}">
-    @csrf
-    @method('PUT')
-{{--
     <div class="mb-3">
         <label class="form-label">Établissement</label>
-        <select name="etablissement_id" class="form-select" required disabled>
-            <option value="{{ $menu->etablissement->id }}">{{ $menu->etablissement->nom }}</option>
+        <select class="form-select" disabled>
+            <option>{{ $menu->etablissement->nom }}</option>
         </select>
-    </div> --}}
+        <input type="hidden" name="etablissement_id" value="{{ $menu->etablissement->id }}">
+    </div>
 
-<div class="mb-3">
-    <label class="form-label">Établissement</label>
-    <select class="form-select" disabled>
-        <option>{{ $menu->etablissement->nom }}</option>
-    </select>
-    <input type="hidden" name="etablissement_id" value="{{ $menu->etablissement->id }}">
-</div>
     <div class="row">
         <div class="col-md-6 mb-3">
             <label class="form-label">Date de début de semaine</label>
@@ -189,7 +58,7 @@
                                 $quantite = $checked ? $selected[$jour][$type][$p->id]['quantite'] : '';
                             @endphp
                             <div class="col-md-4 produit-item"
-                                 style="display: none;"
+                                 style="{{ $checked ? 'display: block;' : 'display: none;' }}"
                                  data-categorie="{{ $cat->id }}"
                                  data-nom="{{ strtolower($p->nom) }}"
                                  data-section="{{ $jour }}-{{ $type }}">
@@ -220,6 +89,7 @@
 
     <button type="submit" class="btn btn-primary mt-4">Mettre à jour</button>
 </form>
+
 @if ($errors->any())
     <div class="alert alert-danger">
         <ul class="mb-0">
@@ -229,7 +99,6 @@
         </ul>
     </div>
 @endif
-
 
 {{-- Scripts --}}
 <script>
