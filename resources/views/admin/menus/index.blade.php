@@ -57,7 +57,6 @@
 <table class="table table-bordered">
     <thead>
         <tr>
-            <th>#</th>
             <th>Établissement</th>
             <th>Province</th>
             <th>Ville</th>
@@ -68,7 +67,6 @@
     <tbody>
         @foreach($menus as $menu)
             <tr>
-                <td>{{ $menu->id }}</td>
                 <td>{{ $menu->etablissement->nom }}</td>
                 <td>{{ $menu->etablissement->province->nom ?? '---' }}</td>
                 <td>{{ $menu->etablissement->province->ville->nom ?? '---' }}</td>
