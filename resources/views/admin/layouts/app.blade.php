@@ -147,6 +147,12 @@
                         </a>
                     </li>
 
+                    <li class="nav-item px-3">
+                        <a href="{{ route('admin.livraisons.index') }}" class="nav-link">
+                            <span class="nav-text">Livraisons</span>
+                        </a>
+                    </li>
+
                 </ul>
             </div>
 

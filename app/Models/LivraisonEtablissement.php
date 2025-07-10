@@ -11,15 +11,21 @@ class LivraisonEtablissement extends Model
 
     protected $table = 'livraisons_etablissement';
 
-    protected $fillable = [
+     protected $fillable = [
         'etablissement_id',
-        'semaine',
+        'menu_id',
         'date_livraison',
+        'statut',
     ];
 
     public function etablissement()
     {
         return $this->belongsTo(Etablissement::class);
+    }
+
+    public function menu()
+    {
+        return $this->belongsTo(Menu::class);
     }
 
     public function details()

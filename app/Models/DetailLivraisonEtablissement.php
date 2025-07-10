@@ -9,6 +9,8 @@ class DetailLivraisonEtablissement extends Model
 {
     use HasFactory;
 
+    protected $table = 'detail_livraison_etablissement';
+
         protected $fillable = [
         'livraison_etablissement_id', 'produit_id', 'lot_stock_admin_id', 'quantite_livree'
     ];

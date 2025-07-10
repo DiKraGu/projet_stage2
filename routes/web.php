@@ -67,18 +67,17 @@ Route::middleware(['auth.admin'])->prefix('admin')->name('admin.')->group(functi
     Route::resource('categories', CategorieController::class);
     Route::resource('produits', ProduitController::class);
     Route::resource('stocks', LotStockAdminController::class);
-    // Route::resource('stocks', StockController::class);
-    Route::resource('livraisons', LivraisonController::class);
+
     Route::resource('menus', MenuController::class);
     Route::get('menus/{menu}/pdf', [MenuController::class, 'pdf'])->name('menus.pdf');
-    // Route::get('alerts', [LotStockAdminController::class, 'alerts'])->name('alerts');
 
     Route::get('alertes', [AlerteController::class, 'index'])->name('alerts');
     Route::post('alertes/mass-action', [AlerteController::class, 'massAction'])->name('alerts.bulk');
     Route::post('alertes/{id}/ignore', [AlerteController::class, 'ignore'])->name('alerts.ignore');
     Route::delete('alertes/{id}', [AlerteController::class, 'destroy'])->name('alerts.destroy');
 
-
+    Route::resource('livraisons', LivraisonController::class);
+    Route::patch('livraisons/{livraison}/annuler', [LivraisonController::class, 'annuler'])->name('livraisons.annuler');
 
 });
 

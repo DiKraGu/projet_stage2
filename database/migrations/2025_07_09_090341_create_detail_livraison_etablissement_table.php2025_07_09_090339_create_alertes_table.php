@@ -14,11 +14,7 @@ return new class extends Migration
         Schema::create('detail_livraison_etablissement', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('livraison_etablissement_id');
-            // $table->foreignId('livraison_etablissement_id')->constrained('livraisons_etablissement')->onDelete('cascade');
-            $table->foreign('livraison_etablissement_id', 'fk_detail_livraison_livraison_id')
-                ->references('id')
-                ->on('livraisons_etablissement')
-                ->onDelete('cascade');
+            $table->foreign('livraison_etablissement_id', 'fk_detail_livraison_livraison_id')->references('id')->on('livraisons_etablissement')->onDelete('cascade');
 
             $table->foreignId('produit_id')->constrained()->onDelete('cascade');
             $table->foreignId('lot_stock_admin_id')->nullable()->constrained('lot_stock_admins')->onDelete('cascade');
