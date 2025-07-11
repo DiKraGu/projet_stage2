@@ -10,19 +10,6 @@ use Illuminate\Http\Request;
 
 class ProvinceController extends Controller
 {
-//     public function index(Request $request)
-// {
-//     $query = Province::with('ville.region')
-//         ->withCount('etablissements');
-
-//     if ($request->filled('search')) {
-//         $query->where('nom', 'LIKE', '%' . $request->search . '%');
-//     }
-
-//     $provinces = $query->paginate(10);
-
-//     return view('admin.provinces.index', compact('provinces'));
-// }
 
 public function index(Request $request)
 {

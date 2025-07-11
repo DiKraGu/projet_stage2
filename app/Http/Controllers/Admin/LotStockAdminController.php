@@ -13,67 +13,6 @@ use Illuminate\Support\Collection;
 class LotStockAdminController extends Controller
 {
 
-
-// public function index(Request $request)
-// {
-//     $query = LotStockAdmin::with('produit');
-
-//     // Filtrage par nom de produit
-//     if ($request->filled('search')) {
-//         $query->whereHas('produit', function ($q) use ($request) {
-//             $q->where('nom', 'like', '%' . $request->search . '%');
-//         });
-//     }
-
-//     // Filtrage par état
-//     if ($request->filled('etat')) {
-//         $etat = $request->etat;
-//         $query->where(function ($q) use ($etat) {
-//             if ($etat === 'actif') {
-//                 $q->where('quantite_disponible', '>', 0)
-//                   ->where('date_expiration', '>=', now()->toDateString());
-//             } elseif ($etat === 'perime') {
-//                 $q->where('date_expiration', '<', now()->toDateString());
-//             } elseif ($etat === 'epuise') {
-//                 $q->where('quantite_disponible', '=', 0);
-//             }
-//         });
-//     }
-
-//     // ✅ Filtrage par date de réception
-//     if ($request->filled('date_reception')) {
-//         $query->whereDate('date_reception', $request->date_reception);
-//     }
-
-//     // ✅ Filtrage par date d'expiration
-//     if ($request->filled('date_expiration')) {
-//         $query->whereDate('date_expiration', $request->date_expiration);
-//     }
-
-//     // Récupération des lots
-//     $lotsNonPagines = $query->get();
-
-//     // Tri personnalisé (périmé -> épuisé -> actif)
-//     $lotsTries = $lotsNonPagines->sortBy(function ($lot) {
-//         if ($lot->isExpired()) return 0;
-//         if ($lot->quantite_disponible == 0) return 1;
-//         return 2;
-//     })->values();
-
-//     // Pagination manuelle
-//     $page = $request->get('page', 1);
-//     $perPage = 10;
-//     $lots = new \Illuminate\Pagination\LengthAwarePaginator(
-//         $lotsTries->forPage($page, $perPage),
-//         $lotsTries->count(),
-//         $perPage,
-//         $page,
-//         ['path' => $request->url(), 'query' => $request->query()]
-//     );
-
-//     return view('admin.stocks.index', compact('lots'));
-// }
-
 public function index(Request $request)
 {
     $query = LotStockAdmin::with('produit');
