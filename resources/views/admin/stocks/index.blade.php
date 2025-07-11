@@ -47,6 +47,7 @@
     <table class="table table-bordered">
         <thead>
             <tr>
+                <th>ID</th>
                 <th>Produit</th>
                 <th>Quantité reçue</th>
                 <th>Quantité dispo</th>
@@ -67,6 +68,7 @@
                         table-danger
                     @endif
                 ">
+                    <td>{{$lot->id}}</td>
                     <td>{{ $lot->produit->nom }}</td>
                     <td>{{ $lot->quantite_recue }}</td>
                     <td>{{ $lot->quantite_disponible }}</td>

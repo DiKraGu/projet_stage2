@@ -43,14 +43,6 @@
         </select>
     </div>
 
-    {{-- <div class="col-md-2">
-        <input type="date" name="semaine" class="form-control" value="{{ request('semaine') }}" onchange="document.getElementById('filterForm').submit();">
-    </div>
-
-    <div class="col-md-2">
-        <input type="date" name="semaine_fin" class="form-control" value="{{ request('semaine_fin') }}" onchange="document.getElementById('filterForm').submit();">
-    </div> --}}
-
     <div class="col-md-2">
         <input type="date" name="selected_date" class="form-control" value="{{ request('selected_date') }}" onchange="document.getElementById('filterForm').submit();">
     </div>
