@@ -237,34 +237,145 @@ class LivraisonController extends Controller
     }
 
     // Annuler une livraison (changer le statut)
+    // public function annuler(LivraisonEtablissement $livraison)
+    // {
+    //     if ($livraison->statut !== 'annulée') {
+    //         $livraison->update(['statut' => 'annulée']);
+    //         return redirect()->route('admin.livraisons.index')->with('success', 'Livraison annulée avec succès.');
+    //     }
+    //     return redirect()->route('admin.livraisons.index')->with('error', 'La livraison est déjà annulée.');
+    // }
+
     public function annuler(LivraisonEtablissement $livraison)
-    {
-        if ($livraison->statut !== 'annulée') {
-            $livraison->update(['statut' => 'annulée']);
-            return redirect()->route('admin.livraisons.index')->with('success', 'Livraison annulée avec succès.');
-        }
-        return redirect()->route('admin.livraisons.index')->with('error', 'La livraison est déjà annulée.');
-    }
-
-    // Interdire édition
-    public function edit()
-    {
-        return redirect()->route('admin.livraisons.index')->with('error', 'Modification non autorisée.');
-    }
-
-    public function update()
-    {
-        return back()->with('error', 'Modification désactivée.');
-    }
-
-    public function marquerCommeLivree(LivraisonEtablissement $livraison)
 {
     if ($livraison->statut !== 'en_attente') {
-        return back()->with('error', 'Cette livraison ne peut pas être modifiée.');
+        return back()->with('error', 'Seules les livraisons en attente peuvent être annulées.');
+    }
+
+    $livraison->update(['statut' => 'annulée']);
+
+    return redirect()->route('admin.livraisons.index')->with('success', 'Livraison annulée avec succès.');
+}
+
+    // Interdire édition
+    // public function edit()
+    // {
+    //     return redirect()->route('admin.livraisons.index')->with('error', 'Modification non autorisée.');
+    // }
+
+    // public function update()
+    // {
+    //     return back()->with('error', 'Modification désactivée.');
+    // }
+
+    public function edit(LivraisonEtablissement $livraison)
+{
+    if ($livraison->statut !== 'en_attente') {
+        return redirect()->route('admin.livraisons.index')->with('error', 'Seules les livraisons en attente peuvent être modifiées.');
+    }
+
+    return view('admin.livraisons.edit', compact('livraison'));
+}
+
+public function update(Request $request, LivraisonEtablissement $livraison)
+{
+    if ($livraison->statut !== 'en_attente') {
+        return redirect()->route('admin.livraisons.index')->with('error', 'Cette livraison ne peut plus être modifiée.');
+    }
+
+    $request->validate([
+        'date_livraison' => 'nullable|date',
+        'statut' => 'required|in:en_attente,livrée',
+    ]);
+
+    $livraison->update([
+        'date_livraison' => $request->date_livraison,
+        'statut' => $request->statut,
+    ]);
+
+    return redirect()->route('admin.livraisons.index')->with('success', 'Livraison modifiée avec succès.');
+}
+
+//     public function marquerCommeLivree(LivraisonEtablissement $livraison)
+// {
+//     if ($livraison->statut !== 'en_attente') {
+//         return back()->with('error', 'Cette livraison ne peut pas être modifiée.');
+//     }
+
+//     DB::beginTransaction();
+
+//     try {
+//         $produits = DB::table('menu_produit')
+//             ->where('menu_id', $livraison->menu_id)
+//             ->join('produits', 'produits.id', '=', 'menu_produit.produit_id')
+//             ->select('produits.id', 'produits.nom', 'menu_produit.quantite_utilisee as total')
+//             ->get();
+
+//         foreach ($produits as $produit) {
+//             $quantiteDemandee = (int) $produit->total;
+//             $lots = LotStockAdmin::where('produit_id', $produit->id)
+//                 ->where('quantite_disponible', '>', 0)
+//                 ->whereDate('date_expiration', '>=', now())
+//                 ->orderBy('date_reception')
+//                 ->get();
+
+//             $reste = $quantiteDemandee;
+
+//             foreach ($lots as $lot) {
+//                 if ($reste <= 0) break;
+
+//                 $aPrendre = min($lot->quantite_disponible, $reste);
+//                 $lot->decrement('quantite_disponible', $aPrendre);
+
+//                 DetailLivraisonEtablissement::create([
+//                     'livraison_etablissement_id' => $livraison->id,
+//                     'produit_id' => $produit->id,
+//                     'lot_stock_admin_id' => $lot->id,
+//                     'quantite_livree' => $aPrendre,
+//                 ]);
+
+//                 MouvementStock::create([
+//                     'type' => 'sortie',
+//                     'produit_id' => $produit->id,
+//                     'lot_stock_admin_id' => $lot->id,
+//                     'quantite' => $aPrendre,
+//                     'date' => now(),
+//                     'origine' => 'livraison',
+//                 ]);
+
+//                 $reste -= $aPrendre;
+//             }
+
+//             if ($reste > 0) {
+//                 DB::rollBack();
+//                 return back()->withErrors(["produits.{$produit->id}.quantite" => "Stock insuffisant pour le produit : $produit->nom."]);
+//             }
+//         }
+
+//         $livraison->update(['statut' => 'livrée']);
+
+//         DB::commit();
+//         return redirect()->route('admin.livraisons.show', $livraison->id)->with('success', 'Livraison marquée comme livrée avec succès.');
+
+//     } catch (\Exception $e) {
+//         DB::rollBack();
+//         Log::error($e);
+//         return back()->withErrors(['exception' => $e->getMessage()]);
+//     }
+// }
+
+public function marquerCommeLivree(LivraisonEtablissement $livraison)
+{
+    if ($livraison->statut !== 'en_attente') {
+        return back()->with('error', 'Seules les livraisons en attente peuvent être marquées comme livrées.');
+    }
+
+    // Vérifier que les détails n'existent pas déjà
+    if ($livraison->details()->exists()) {
+        return back()->with('error', 'Cette livraison a déjà été traitée.');
     }
 
     DB::beginTransaction();
-
     try {
         $produits = DB::table('menu_produit')
             ->where('menu_id', $livraison->menu_id)
@@ -309,19 +420,17 @@ class LivraisonController extends Controller
 
             if ($reste > 0) {
                 DB::rollBack();
-                return back()->withErrors(["produits.{$produit->id}.quantite" => "Stock insuffisant pour le produit : $produit->nom."]);
+                return back()->with('error', "Stock insuffisant pour le produit : {$produit->nom}.");
             }
         }
 
         $livraison->update(['statut' => 'livrée']);
-
         DB::commit();
-        return redirect()->route('admin.livraisons.show', $livraison->id)->with('success', 'Livraison marquée comme livrée avec succès.');
 
+        return back()->with('success', 'La livraison a été marquée comme livrée.');
     } catch (\Exception $e) {
         DB::rollBack();
-        Log::error($e);
-        return back()->withErrors(['exception' => $e->getMessage()]);
+        return back()->with('error', 'Erreur technique : ' . $e->getMessage());
     }
 }
 

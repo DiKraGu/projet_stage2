@@ -1,72 +1,78 @@
+
 @extends('admin.layouts.app')
 
 @section('title', 'Détails de la livraison')
 
 @section('content')
-<h1>Détails livraison #{{ $livraison->id }}</h1>
+    <h1>Détails livraison #{{ $livraison->id }}</h1>
 
-<a href="{{ route('admin.livraisons.index') }}" class="btn btn-secondary mb-3">← Retour à la liste</a>
+    <a href="{{ route('admin.livraisons.index') }}" class="btn btn-secondary mb-3">← Retour à la liste</a>
 
-@if (session('success'))
-    <div class="alert alert-success">{{ session('success') }}</div>
-@endif
+    @if (session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
 
-@if (session('error'))
-    <div class="alert alert-danger">{{ session('error') }}</div>
-@endif
+    @if (session('error'))
+        <div class="alert alert-danger">{{ session('error') }}</div>
+    @endif
 
-@if ($errors->has('exception'))
-    <div class="alert alert-danger">Erreur technique : {{ $errors->first('exception') }}</div>
-@endif
+    @if ($errors->has('exception'))
+        <div class="alert alert-danger">Erreur technique : {{ $errors->first('exception') }}</div>
+    @endif
 
-<div class="mb-4">
-    <p><strong>Établissement :</strong> {{ $livraison->etablissement->nom }}</p>
-    <p><strong>Semaine du menu :</strong> {{ \Carbon\Carbon::parse($livraison->menu->semaine)->format('d/m/Y') }}</p>
-    <p><strong>Date de livraison :</strong> {{ $livraison->date_livraison ?? '-' }}</p>
-    <p><strong>Statut :</strong>
-        @if($livraison->statut === 'en_attente')
-            <span class="badge bg-warning text-dark">En attente</span>
-        @elseif($livraison->statut === 'livrée')
-            <span class="badge bg-success">Livrée</span>
-        @elseif($livraison->statut === 'annulée')
-            <span class="badge bg-danger">Annulée</span>
-        @endif
-    </p>
-</div>
+    <div class="mb-4">
+        <p><strong>Établissement :</strong> {{ $livraison->etablissement->nom }}</p>
+        <p><strong>Semaine du menu :</strong> {{ \Carbon\Carbon::parse($livraison->menu->semaine)->format('d/m/Y') }}</p>
+        <p><strong>Date de livraison :</strong> {{ $livraison->date_livraison ?? '-' }}</p>
+    </div>
 
-{{-- Bouton pour marquer comme livrée --}}
-@if($livraison->statut === 'en_attente')
-    <form action="{{ route('admin.livraisons.marquerLivree', $livraison->id) }}" method="POST" class="mb-4">
+    {{-- Formulaire de modification du statut --}}
+    <form action="{{ route('admin.livraisons.update', $livraison->id) }}" method="POST" class="mb-4">
         @csrf
         @method('PATCH')
-        <button type="submit" class="btn btn-primary">✅ Marquer comme livrée</button>
+
+        <div class="mb-3">
+            <label for="statut" class="form-label"><strong>Modifier le statut :</strong></label>
+            {{-- <select name="statut" id="statut" class="form-control" onchange="this.form.submit()" {{ $livraison->statut === 'livrée' ? 'disabled' : '' }}> --}}
+                <select name="statut" id="statut" class="form-control" onchange="this.form.submit()" {{ in_array($livraison->statut, ['livrée', 'annulée']) ? 'disabled' : '' }}>
+
+                @if($livraison->statut === 'livrée')
+                    <option value="livrée" selected>Livrée</option>
+                @elseif($livraison->statut === 'annulée')
+                    <option value="annulée" selected>Annulée</option>
+                @else
+                    <option value="en_attente" {{ $livraison->statut === 'en_attente' ? 'selected' : '' }}>En attente</option>
+                    <option value="livrée" {{ $livraison->statut === 'livrée' ? 'selected' : '' }}>Livrée</option>
+                    <option value="annulée" {{ $livraison->statut === 'annulée' ? 'selected' : '' }}>Annulée</option>
+                @endif
+            </select>
+        </div>
     </form>
-@endif
 
-<h3>Produits livrés</h3>
+    <h3>Produits livrés</h3>
 
-@if ($livraison->details->isEmpty())
-    <p class="text-muted">Aucun produit encore livré.</p>
-@else
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Produit</th>
-                <th>Quantité livrée</th>
-                <th>Lot</th>
-                <th>Date d'expiration du lot</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($livraison->details as $detail)
+    @if ($livraison->details->isEmpty())
+        <p class="text-muted">Aucun produit encore livré.</p>
+    @else
+        <table class="table table-bordered">
+            <thead>
                 <tr>
-                    <td>{{ $detail->produit->nom }}</td>
-                    <td>{{ $detail->quantite_livree }}</td>
-                    <td>{{ $detail->lotStockAdmin->id ?? '-' }}</td>
-                    <td>{{ $detail->lotStockAdmin->date_expiration ?? '-' }}</td>
+                    <th>Produit</th>
+                    <th>Quantité livrée</th>
+                    <th>Lot</th>
+                    <th>Date d'expiration du lot</th>
                 </tr>
-            @endforeach
-        </tbody>
-    </table>
-@endif
+            </thead>
+            <tbody>
+                @foreach($livraison->details as $detail)
+                    <tr>
+                        <td>{{ $detail->produit->nom }}</td>
+                        <td>{{ $detail->quantite_livree }}</td>
+                        <td>{{ $detail->lotStockAdmin->id ?? '-' }}</td>
+                        <td>{{ $detail->lotStockAdmin->date_expiration ?? '-' }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @endif
 @endsection
