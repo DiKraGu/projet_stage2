@@ -78,6 +78,7 @@ Route::middleware(['auth.admin'])->prefix('admin')->name('admin.')->group(functi
 
     Route::resource('livraisons', LivraisonController::class);
     Route::patch('livraisons/{livraison}/annuler', [LivraisonController::class, 'annuler'])->name('livraisons.annuler');
+Route::patch('livraisons/{livraison}/livree', [LivraisonController::class, 'marquerCommeLivree'])->name('livraisons.marquerLivree');
 
 });
 

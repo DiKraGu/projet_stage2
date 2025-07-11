@@ -5,9 +5,21 @@
 @section('content')
 <h1>Détails livraison #{{ $livraison->id }}</h1>
 
-<a href="{{ route('admin.livraisons.index') }}" class="btn btn-secondary mb-3">Retour à la liste</a>
+<a href="{{ route('admin.livraisons.index') }}" class="btn btn-secondary mb-3">← Retour à la liste</a>
 
-<div>
+@if (session('success'))
+    <div class="alert alert-success">{{ session('success') }}</div>
+@endif
+
+@if (session('error'))
+    <div class="alert alert-danger">{{ session('error') }}</div>
+@endif
+
+@if ($errors->has('exception'))
+    <div class="alert alert-danger">Erreur technique : {{ $errors->first('exception') }}</div>
+@endif
+
+<div class="mb-4">
     <p><strong>Établissement :</strong> {{ $livraison->etablissement->nom }}</p>
     <p><strong>Semaine du menu :</strong> {{ \Carbon\Carbon::parse($livraison->menu->semaine)->format('d/m/Y') }}</p>
     <p><strong>Date de livraison :</strong> {{ $livraison->date_livraison ?? '-' }}</p>
@@ -22,26 +34,39 @@
     </p>
 </div>
 
-<h3>Produits livrés</h3>
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Produit</th>
-            <th>Quantité livrée</th>
-            <th>Lot</th>
-            <th>Date d'expiration du lot</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach($livraison->details as $detail)
-            <tr>
-                <td>{{ $detail->produit->nom }}</td>
-                <td>{{ $detail->quantite_livree }}</td>
-                <td>{{ $detail->lotStockAdmin->id ?? '-' }}</td>
-                <td>{{ $detail->lotStockAdmin->date_expiration ?? '-' }}</td>
-            </tr>
-        @endforeach
-    </tbody>
-</table>
+{{-- Bouton pour marquer comme livrée --}}
+@if($livraison->statut === 'en_attente')
+    <form action="{{ route('admin.livraisons.marquerLivree', $livraison->id) }}" method="POST" class="mb-4">
+        @csrf
+        @method('PATCH')
+        <button type="submit" class="btn btn-primary">✅ Marquer comme livrée</button>
+    </form>
+@endif
 
+<h3>Produits livrés</h3>
+
+@if ($livraison->details->isEmpty())
+    <p class="text-muted">Aucun produit encore livré.</p>
+@else
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Produit</th>
+                <th>Quantité livrée</th>
+                <th>Lot</th>
+                <th>Date d'expiration du lot</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($livraison->details as $detail)
+                <tr>
+                    <td>{{ $detail->produit->nom }}</td>
+                    <td>{{ $detail->quantite_livree }}</td>
+                    <td>{{ $detail->lotStockAdmin->id ?? '-' }}</td>
+                    <td>{{ $detail->lotStockAdmin->date_expiration ?? '-' }}</td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+@endif
 @endsection
